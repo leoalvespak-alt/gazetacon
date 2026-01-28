@@ -6,16 +6,20 @@ import {
   FileText, 
   Tags, 
   Settings, 
-  LogOut 
+  LogOut,
+  Users,
+  Trophy,
+  FileCheck
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { supabase } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase-browser"
 import { useRouter } from "next/navigation"
 
 export function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const supabase = createClient()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -26,7 +30,10 @@ export function AdminSidebar() {
   const links = [
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/posts", label: "Posts", icon: FileText },
+    { href: "/admin/concursos", label: "Concursos", icon: Trophy },
     { href: "/admin/categories", label: "Categorias", icon: Tags },
+    { href: "/admin/provas", label: "Provas", icon: FileCheck },
+    { href: "/admin/users", label: "Usuários", icon: Users },
     { href: "/admin/settings", label: "Configurações", icon: Settings },
   ]
 

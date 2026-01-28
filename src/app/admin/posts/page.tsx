@@ -2,9 +2,10 @@
 export const dynamic = "force-dynamic"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase-browser"
 import { PlusCircle, MoreHorizontal, Edit, Eye, Trash, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+
 import {
   Card,
   CardContent,
@@ -34,6 +35,7 @@ import { toast } from "sonner"
 export default function PostsPage() {
   const [posts, setPosts] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const supabase = createClient()
 
   const fetchPosts = async () => {
     setLoading(true)

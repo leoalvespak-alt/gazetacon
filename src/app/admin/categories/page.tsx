@@ -2,7 +2,7 @@
 export const dynamic = "force-dynamic"
 
 import { useState, useEffect } from "react"
-import { supabase } from '@/lib/supabase' // Note: We might need a browser client specific file if middleware uses cookies
+import { createClient } from '@/lib/supabase-browser' // Updated to browser client for correct auth
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -26,9 +26,8 @@ export default function CategoriesPage() {
   const [newCategoryName, setNewCategoryName] = useState("")
   const [newCategoryColor, setNewCategoryColor] = useState("#3b82f6") // Default blue
   const [submitting, setSubmitting] = useState(false)
+  const supabase = createClient()
 
-  // Local Supabase Client (assuming lib/supabase.ts is client-safe)
-  // Local Supabase Client imported directly
 
   useEffect(() => {
     fetchCategories()

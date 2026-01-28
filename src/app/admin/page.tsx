@@ -1,13 +1,14 @@
 "use client"
 export const dynamic = "force-dynamic"
 import { useEffect, useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { createClient } from "@/lib/supabase-browser"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FileText, Eye, LayoutGrid, PlusCircle } from "lucide-react"
+import { FileText, LayoutGrid, PlusCircle } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 
 export default function AdminDashboard() {
+  const supabase = createClient()
   const [stats, setStats] = useState({
     totalPosts: 0,
     publishedPosts: 0,
@@ -25,15 +26,15 @@ export default function AdminDashboard() {
       if (posts) {
         setStats({
           totalPosts: posts.length,
-          publishedPosts: posts.filter((p: any) => p.published).length,
-          draftPosts: posts.filter((p: any) => !p.published).length,
+          publishedPosts: posts.filter((p: { published: boolean }) => p.published).length,
+          draftPosts: posts.filter((p: { published: boolean }) => !p.published).length,
           categories: catCount || 0
         })
       }
       setLoading(false)
     }
     fetchStats()
-  }, [])
+  }, [supabase])
 
   return (
     <div className="space-y-8">
