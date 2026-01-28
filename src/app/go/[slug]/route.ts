@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase-server'
+import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { redirect } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 
@@ -8,12 +8,12 @@ export async function GET(
 ) {
   // Await params correctly in Next.js 15/16
   const { slug } = await params
-  const supabase = await createClient()
+  const supabase = await createServerSupabaseClient()
 
   // Buscar link
   const { data: link, error } = await supabase
     .from('affiliate_links')
-    .select('destination_url, active')
+    .select('destination_url, active, clicks')
     .eq('slug', slug)
     .single()
 

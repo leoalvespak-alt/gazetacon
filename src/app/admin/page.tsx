@@ -11,26 +11,10 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import { PostsPerMonthChart } from "@/components/admin/charts/PostsPerMonthChart"
 import { ConcursosByAreaChart } from "@/components/admin/charts/ConcursosByAreaChart"
-  DashboardStats,
-  PostsPerMonth,
-  ConcursosByArea,
-  DashboardAlert,
-  RecentPost,
-  FeaturedConcurso
-} from "./dashboard-actions"
-
-export default function AdminDashboard() {
-  const [stats, setStats] = useState<DashboardStats | null>(null)
-
-      {/* Radar de Editais */}
-      {radarData.length > 0 && (
-        <div className="grid gap-6">
-           <RadarEditais items={radarData} />
-        </div>
-      )}
-
-      {/* Listas e Ações */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+import { RadarEditais, RadarItem } from "@/components/admin/RadarEditais"
+import { DashboardAlerts } from "@/components/admin/DashboardAlerts"
+import { ConcursoStatusBadge } from "@/components/admin/ConcursoStatusBadge"
+import { ConcursoStatus } from "@/types/concurso"
 
 import {
   getDashboardStats,
@@ -86,7 +70,7 @@ export default function AdminDashboard() {
       setAlerts(alertsData)
       setRecentPosts(recentData)
       setFeaturedConcursos(featuredData)
-      setRadarData(radar)
+      setRadarData(radar as RadarItem[])
       setLoading(false)
     }
     
@@ -206,6 +190,13 @@ export default function AdminDashboard() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Radar de Editais */}
+      {!loading && radarData.length > 0 && (
+        <div className="grid gap-6">
+           <RadarEditais items={radarData} />
+        </div>
+      )}
 
       {/* Alertas */}
       {!loading && alerts.length > 0 && (
@@ -346,23 +337,25 @@ export default function AdminDashboard() {
             ) : featuredConcursos.length > 0 ? (
               <div className="space-y-3">
                 {featuredConcursos.map((concurso) => (
-                  <Link 
+                  <div 
                     key={concurso.id} 
-                    href={`/admin/concursos/${concurso.id}/edit`}
-                    className="flex items-center gap-3 p-2 -mx-2 rounded-md hover:bg-muted transition-colors"
+                    className="flex items-center gap-3 p-2 -mx-2 rounded-md hover:bg-muted transition-colors group relative"
                   >
-                    <div className="flex-1 min-w-0">
+                    <Link 
+                      href={`/admin/concursos/${concurso.id}/edit`}
+                      className="flex-1 min-w-0"
+                    >
                       <p className="font-medium text-sm truncate">{concurso.titulo}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <span className="text-xs text-muted-foreground">{concurso.orgao}</span>
                         <ConcursoStatusBadge status={concurso.status as ConcursoStatus} />
                       </div>
-                    </div>
+                    </Link>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Eye className="h-3 w-3" />
                       {concurso.visualizacoes}
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             ) : (
