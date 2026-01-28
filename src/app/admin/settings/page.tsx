@@ -29,6 +29,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 import { getSettings, saveSettings, SiteSettings } from "./actions"
 import { toast } from "sonner"
+import { ImageUpload } from "./image-upload"
 
 export default function SettingsPage() {
   const [settings, setSettings] = useState<SiteSettings | null>(null)
@@ -435,6 +436,27 @@ export default function SettingsPage() {
                     <SelectItem value="dark">Sempre escuro</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Branding</CardTitle>
+              <CardDescription>Logo e Ícones</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid gap-6 sm:grid-cols-2">
+                <ImageUpload 
+                  label="Logo do Site" 
+                  value={settings.logoUrl} 
+                  onChange={(url) => updateSetting('logoUrl', url)} 
+                />
+                <ImageUpload 
+                  label="Ícone Sidebar / Favicon" 
+                  value={settings.faviconUrl} 
+                  onChange={(url) => updateSetting('faviconUrl', url)} 
+                />
               </div>
             </CardContent>
           </Card>

@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import Tiptap from '@/components/editor/TiptapEditor'
+import { RichEditor } from '@/components/admin/posts/RichEditor'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
@@ -143,11 +143,11 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                />
             </div>
             
-            <Card className="min-h-[500px]">
-               <CardContent className="p-0 h-full">
-                  <Tiptap content={content} onChange={setContent} />
-               </CardContent>
-            </Card>
+            <RichEditor 
+               content={content} 
+               onChange={setContent}
+               placeholder="Escreva seu artigo com o novo editor rico..."
+            />
          </div>
          
          <div className="space-y-6">

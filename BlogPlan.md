@@ -6,12 +6,14 @@ Este documento contém uma sequência lógica de prompts para criar um blog de c
 **Banco de Dados Sugerido:** Supabase (PostgreSQL).
 
 ---
+
 SUPABASE
 URL: https://bexxizmtifmppeeybiii.supabase.co
-Publishable API Key: sb_publishable_SBbJhdjgLAxJ4JOMuaCzVw_mQA__haU
+Publishable API Key: sb_publishable_SBbJhdjgLAxJ4JOMuaCzVw_mQA\_\_haU
 anon: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJleHhpem10aWZtcHBlZXliaWlpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjY2OTA0NjUsImV4cCI6MjA4MjI2NjQ2NX0.xbJxBB_kQt3MgYbzQ_y_yNDES8oba7RRtUfOjLq1qcY
 secret: sb_secret_mTslENhDVFKSeYecbWCY2g_qKVXfvvB
 service role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJleHhpem10aWZtcHBlZXliaWlpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2NjY5MDQ2NSwiZXhwIjoyMDgyMjY2NDY1fQ.wZZy3TKUqMzK9m97iiMNpxHSd-LSC1Fe4U79qJPtPU4
+
 ---
 
 ## 🏗️ Fase 1: Fundação e Layout Público
@@ -24,7 +26,8 @@ service role: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZ
 - [x] Área Admin (Login + CRUD Categorias + Posts)
 - [x] Resolver erros de Build e Tipagem
 - [x] Estilizar com design Premium e imagens IA
-- [ ] Upload de Imagens no Supabase Storage (Pendência opcional)
+- [x] Implementação de Editor Rico (Tiptap v3) com Menus Flutuantes
+- [x] Upload de Imagens no Supabase Storage (Integrado ao Editor e Capa)
 - [ ] SEO Avançado e Sitemap (Próximos passos)
       **Copie e cole este prompt primeiro para "calibrar" o Cursor.**
 

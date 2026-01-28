@@ -17,11 +17,14 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { createClient } from "@/lib/supabase-browser"
 import { useRouter } from "next/navigation"
+import { useSettings } from "@/components/providers/settings-provider"
+import Image from "next/image"
 
 export function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
   const supabase = createClient()
+  const { settings } = useSettings()
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -45,8 +48,13 @@ export function AdminSidebar() {
     <aside className="hidden border-r bg-muted/40 md:block w-64 min-h-screen fixed inset-y-0 left-0 z-10">
       <div className="flex h-full max-h-screen flex-col gap-2">
         <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6 bg-background">
-          <Link href="/" className="flex items-center gap-2 font-semibold">
-            <span className="">Gazeta dos Concursos Admin</span>
+          <Link href="/" className="flex items-center gap-2 font-semibold overflow-hidden">
+            {settings?.faviconUrl ? (
+               <div className="relative w-8 h-8 shrink-0">
+                 <Image src={settings.faviconUrl} alt="Logo" fill className="object-contain" />
+               </div>
+            ) : null}
+            <span className="truncate">{settings?.siteName || "Gazeta dos Concursos"}</span>
           </Link>
         </div>
         <div className="flex-1 overflow-auto py-2 bg-background">

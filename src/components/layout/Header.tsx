@@ -6,8 +6,12 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { useTheme } from "next-themes"
 import * as React from "react"
 
+import { useSettings } from "@/components/providers/settings-provider"
+import Image from "next/image"
+
 export function Header() {
   const { setTheme, theme } = useTheme()
+  const { settings } = useSettings()
 
   const navItems = [
     { label: "Notícias", href: "/category/noticias" },
@@ -21,9 +25,15 @@ export function Header() {
       <div className="container mx-auto px-4 md:px-6 flex h-14 items-center">
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="hidden font-bold sm:inline-block">
-              Gazeta dos Concursos
-            </span>
+            {settings?.logoUrl ? (
+               <div className="relative w-32 h-8">
+                 <Image src={settings.logoUrl} alt={settings.siteName} fill className="object-contain object-left" priority />
+               </div>
+            ) : (
+                <span className="hidden font-bold sm:inline-block">
+                  {settings?.siteName || "Gazeta dos Concursos"}
+                </span>
+            )}
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
             {navItems.map((item) => (

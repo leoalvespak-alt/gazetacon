@@ -257,3 +257,20 @@ export async function getFeaturedConcursos(limit: number = 5): Promise<FeaturedC
   
   return (data || []) as FeaturedConcurso[]
 }
+
+// Buscar dados para o Radar de Editais
+export async function getRadarData(limit: number = 5) {
+  const supabase = await createServerSupabaseClient()
+  const today = new Date().toISOString().split('T')[0]
+
+  // Buscar concursos com inscrições ou provas próximas
+  const { data } = await supabase
+    .from('concursos')
+    .select('id, titulo, status, data_inscricao_fim, data_prova, banca')
+    .or(`status.eq.inscricoes_abertas,status.eq.previsto`)
+    .gte('data_inscricao_fim', today) // Apenas futuros ou hoje
+    .order('data_inscricao_fim', { ascending: true })
+    .limit(limit)
+
+  return data || []
+}

@@ -8,16 +8,18 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
-import Tiptap from '@/components/editor/TiptapEditor'
+import { RichEditor } from '@/components/admin/posts/RichEditor'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
+import { SeoSnippetPreview } from '@/components/admin/posts/SeoSnippetPreview'
 
 export default function CreatePostPage() {
    const router = useRouter()
    const [title, setTitle] = useState('')
    const [content, setContent] = useState('<p>Comece a escrever...</p>')
    const [slug, setSlug] = useState('')
+   const [seoDescription, setSeoDescription] = useState('')
    const [categoryId, setCategoryId] = useState('')
    const [imageUrl, setImageUrl] = useState('')
    const [published, setPublished] = useState(false)
@@ -75,6 +77,8 @@ export default function CreatePostPage() {
            excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
            cover_image_url: imageUrl || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80', // Default
            published,
+           seo_title: title,
+           seo_description: seoDescription,
            author_id: user?.id
        }
 
@@ -117,11 +121,38 @@ export default function CreatePostPage() {
                />
             </div>
             
-            <Card className="min-h-[500px]">
-               <CardContent className="p-0 h-full">
-                  <Tiptap content={content} onChange={setContent} />
-               </CardContent>
-            </Card>
+            <RichEditor 
+               content={content} 
+               onChange={setContent}
+               placeholder="Escreva seu artigo com o novo editor rico..."
+            />
+
+            <div className="space-y-4">
+                <h3 className="text-lg font-medium">Otimização para Mecanismos de Busca (SEO)</h3>
+                
+                <Card>
+                    <CardContent className="p-6 space-y-4">
+                        <div className="space-y-2">
+                            <Label>Meta Descrição</Label>
+                            <Input 
+                                value={seoDescription} 
+                                onChange={e => setSeoDescription(e.target.value)} 
+                                placeholder="Resumo atrativo para aparecer no Google (max 160 caracteres)"
+                                maxLength={160}
+                            />
+                            <p className="text-xs text-muted-foreground text-right">
+                                {seoDescription.length}/160
+                            </p>
+                        </div>
+
+                        <SeoSnippetPreview 
+                            title={title} 
+                            slug={slug} 
+                            description={seoDescription} 
+                        />
+                    </CardContent>
+                </Card>
+            </div>
          </div>
          
          <div className="space-y-6">

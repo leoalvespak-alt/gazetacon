@@ -11,9 +11,26 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import { PostsPerMonthChart } from "@/components/admin/charts/PostsPerMonthChart"
 import { ConcursosByAreaChart } from "@/components/admin/charts/ConcursosByAreaChart"
-import { DashboardAlerts } from "@/components/admin/DashboardAlerts"
-import { ConcursoStatusBadge } from "@/components/admin/ConcursoStatusBadge"
-import { ConcursoStatus } from "@/types/concurso"
+  DashboardStats,
+  PostsPerMonth,
+  ConcursosByArea,
+  DashboardAlert,
+  RecentPost,
+  FeaturedConcurso
+} from "./dashboard-actions"
+
+export default function AdminDashboard() {
+  const [stats, setStats] = useState<DashboardStats | null>(null)
+
+      {/* Radar de Editais */}
+      {radarData.length > 0 && (
+        <div className="grid gap-6">
+           <RadarEditais items={radarData} />
+        </div>
+      )}
+
+      {/* Listas e Ações */}
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 
 import {
   getDashboardStats,
@@ -22,6 +39,7 @@ import {
   getDashboardAlerts,
   getRecentPosts,
   getFeaturedConcursos,
+  getRadarData,
   DashboardStats,
   PostsPerMonth,
   ConcursosByArea,
@@ -37,6 +55,7 @@ export default function AdminDashboard() {
   const [alerts, setAlerts] = useState<DashboardAlert[]>([])
   const [recentPosts, setRecentPosts] = useState<RecentPost[]>([])
   const [featuredConcursos, setFeaturedConcursos] = useState<FeaturedConcurso[]>([])
+  const [radarData, setRadarData] = useState<RadarItem[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -49,14 +68,16 @@ export default function AdminDashboard() {
         concursosData,
         alertsData,
         recentData,
-        featuredData
+        featuredData,
+        radar
       ] = await Promise.all([
         getDashboardStats(),
         getPostsPerMonth(),
         getConcursosByArea(),
         getDashboardAlerts(),
         getRecentPosts(5),
-        getFeaturedConcursos(5)
+        getFeaturedConcursos(5),
+        getRadarData(5)
       ])
       
       setStats(statsData)
@@ -65,6 +86,7 @@ export default function AdminDashboard() {
       setAlerts(alertsData)
       setRecentPosts(recentData)
       setFeaturedConcursos(featuredData)
+      setRadarData(radar)
       setLoading(false)
     }
     

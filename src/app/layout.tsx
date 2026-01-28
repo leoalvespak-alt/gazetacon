@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { getSettings } from "./admin/settings/actions";
+import { SettingsProvider } from "@/components/providers/settings-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,11 +14,13 @@ export const metadata: Metadata = {
   description: "Dicas, Notícias e Editais de Concursos Públicos",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSettings();
+  
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={inter.className}>
@@ -26,11 +30,13 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <SettingsProvider initialSettings={settings}>
+            <div className="relative flex min-h-screen flex-col">
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+            </div>
+          </SettingsProvider>
         </ThemeProvider>
       </body>
     </html>
