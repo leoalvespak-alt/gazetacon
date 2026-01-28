@@ -12,6 +12,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Gazeta dos Concursos",
   description: "Dicas, Notícias e Editais de Concursos Públicos",
+  icons: {
+    icon: "/favicon.ico",
+    shortcut: "/favicon.ico",
+    apple: "/logo.svg",
+  },
 };
 
 import { Toaster } from "@/components/ui/sonner";

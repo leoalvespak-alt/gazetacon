@@ -26,9 +26,15 @@ export function Header() {
         {/* Logo / Left side */}
         <div className="flex-1 flex items-center">
           <Link href="/" className="flex items-center space-x-2">
-            {settings?.logoUrl ? (
+            {settings?.logoUrl || true ? ( // Force use of logo.svg as default if desired, or just fallback
                <div className="relative w-32 h-10 brightness-0 invert">
-                 <Image src={settings.logoUrl} alt={settings.siteName} fill className="object-contain object-left" priority />
+                 <Image 
+                   src={settings?.logoUrl || "/logo.svg"} 
+                   alt={settings?.siteName || "Gazeta dos Concursos"} 
+                   fill 
+                   className="object-contain object-left" 
+                   priority 
+                 />
                </div>
             ) : (
                 <span className="font-black text-xl sm:inline-block tracking-tighter uppercase">
