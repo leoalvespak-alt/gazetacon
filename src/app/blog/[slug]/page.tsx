@@ -17,6 +17,8 @@ interface Post {
   excerpt: string
   cover_image_url: string
   created_at: string
+  author_name?: string
+  reading_time?: number
   categories: {
     name: string
   } | null
@@ -39,7 +41,7 @@ export default async function BlogPostPage({ params }: PageProps) {
   const typedPost = post as Post
 
   return (
-    <div className="container px-4 md:px-6 py-10 md:py-16">
+    <div className="container mx-auto px-6 md:px-8 py-10 md:py-16">
       <div className="mb-6">
            <Button variant="ghost" asChild className="pl-0 hover:pl-2 transition-all">
                 <Link href="/">
@@ -64,15 +66,15 @@ export default async function BlogPostPage({ params }: PageProps) {
             <div className="flex flex-wrap items-center gap-6 text-muted-foreground text-sm border-b pb-6">
                <div className="flex items-center gap-2">
                  <User className="w-4 h-4"/>
-                 Autor Desconhecido
+                 {typedPost.author_name || 'Equipe Editorial'}
                </div>
                <div className="flex items-center gap-2">
                  <Calendar className="w-4 h-4"/>
-                 {new Date(typedPost.created_at).toLocaleDateString()}
+                 {new Date(typedPost.created_at).toLocaleDateString('pt-BR')}
                </div>
                <div className="flex items-center gap-2">
                  <Clock className="w-4 h-4"/>
-                 5 min de leitura
+                 {typedPost.reading_time || 5} min de leitura
                </div>
             </div>
           </div>
