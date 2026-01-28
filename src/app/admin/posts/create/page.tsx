@@ -8,6 +8,8 @@ import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Switch } from '@/components/ui/switch'
 import { Badge } from '@/components/ui/badge'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Textarea } from "@/components/ui/textarea"
 import { RichEditor } from '@/components/admin/posts/RichEditor'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
@@ -156,11 +158,32 @@ export default function CreatePostPage() {
                />
             </div>
             
-            <RichEditor 
-               content={content} 
-               onChange={setContent}
-               placeholder="Escreva seu artigo com o novo editor rico..."
-            />
+            <Tabs defaultValue="visual" className="w-full">
+              <div className="flex items-center justify-between mb-2">
+                <p className="text-sm text-muted-foreground">Conteúdo do Artigo</p>
+                <TabsList>
+                  <TabsTrigger value="visual">Visual</TabsTrigger>
+                  <TabsTrigger value="html">Código HTML</TabsTrigger>
+                </TabsList>
+              </div>
+
+              <TabsContent value="visual" className="mt-0">
+                <RichEditor 
+                   content={content} 
+                   onChange={setContent}
+                   placeholder="Escreva seu artigo com o novo editor rico..."
+                />
+              </TabsContent>
+
+              <TabsContent value="html" className="mt-0">
+                <Textarea 
+                  value={content}
+                  onChange={(e) => setContent(e.target.value)}
+                  className="min-h-[500px] font-mono text-sm"
+                  placeholder="<div>Escreva seu HTML aqui...</div>"
+                />
+              </TabsContent>
+            </Tabs>
 
             <div className="space-y-4">
                 <h3 className="text-lg font-medium">Otimização para Mecanismos de Busca (SEO)</h3>

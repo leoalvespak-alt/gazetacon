@@ -41,8 +41,11 @@ export default async function Home() {
   const postsData = (posts || []) as Post[]
 
   const hasPosts = postsData.length > 0
-  const featuredPosts = postsData.slice(0, 4)
-  const remainingPosts = postsData.slice(4)
+  const featuredPosts = postsData.slice(0, 5)
+  // Show all posts in the feed, or maybe skip the very first one if it's too redundant?
+  // User asked for "posts and news below too", implying a full feed.
+  // Let's show all posts to ensure the grid is populated.
+  const feedPosts = postsData
 
   return (
     <div className="flex flex-col min-h-screen bg-background">
@@ -50,7 +53,7 @@ export default async function Home() {
         <EmptyState />
       ) : (
         <>
-          {/* Main Content Area */}
+          {/* Main Content Area - Carousel */}
           <FeaturedGrid posts={featuredPosts} />
           
           {/* Categories Bar - Minimalist G1 Style */}
@@ -71,30 +74,28 @@ export default async function Home() {
             </div>
           </section>
 
-          {/* Regular Feed - Two Columns like portal */}
-          {remainingPosts.length > 0 && (
-            <section className="container mx-auto px-4 md:px-6 py-12">
-              <div className="flex items-center gap-4 mb-10">
-                <h2 className="text-2xl font-black uppercase tracking-tighter italic">Últimas do Portal</h2>
-                <div className="h-[2px] flex-1 bg-border/50"></div>
-              </div>
-              
-              <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
-                {remainingPosts.map((post: Post) => (
-                  <PostCard 
-                    key={post.id} 
-                    title={post.title}
-                    category={post.categories?.name || 'Geral'}
-                    excerpt={post.excerpt}
-                    date={new Date(post.created_at).toLocaleDateString('pt-BR')}
-                    readTime="5 min"
-                    image={post.cover_image_url}
-                    slug={post.slug}
-                  />
-                ))}
-              </div>
-            </section>
-          )}
+          {/* Regular Feed - All Posts */}
+          <section className="container mx-auto px-4 md:px-6 py-12">
+            <div className="flex items-center gap-4 mb-10">
+              <h2 className="text-2xl font-black uppercase tracking-tighter italic">Últimas do Portal</h2>
+              <div className="h-[2px] flex-1 bg-border/50"></div>
+            </div>
+            
+            <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+              {feedPosts.map((post: Post) => (
+                <PostCard 
+                  key={post.id} 
+                  title={post.title}
+                  category={post.categories?.name || 'Geral'}
+                  excerpt={post.excerpt}
+                  date={new Date(post.created_at).toLocaleDateString('pt-BR')}
+                  readTime="5 min"
+                  image={post.cover_image_url}
+                  slug={post.slug}
+                />
+              ))}
+            </div>
+          </section>
         </>
       )}
 
