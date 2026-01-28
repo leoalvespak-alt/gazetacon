@@ -59,6 +59,45 @@ function calculateStatus(concurso: Partial<ConcursoFormData>): ConcursoStatus {
   return (concurso.status as ConcursoStatus) || 'previsto'
 }
 
+// Função para sanitizar dados (converter strings vazias em null)
+function sanitizeConcursoData(data: Partial<ConcursoFormData>) {
+  const sanitized = { ...data } as any
+  
+  // Campos de data
+  const dateFields = [
+    'data_publicacao',
+    'data_inscricao_inicio',
+    'data_inscricao_fim',
+    'data_prova',
+    'data_resultado'
+  ]
+  
+  dateFields.forEach(field => {
+    if (sanitized[field] === '') {
+      sanitized[field] = null
+    }
+  })
+  
+  // Outros campos que devem ser null se vazios
+  const nullableFields = [
+    'banca', 
+    'estado', 
+    'cidade', 
+    'edital_url', 
+    'site_oficial', 
+    'escolaridade',
+    'area'
+  ]
+  
+  nullableFields.forEach(field => {
+    if (sanitized[field] === '') {
+      sanitized[field] = null
+    }
+  })
+  
+  return sanitized
+}
+
 // Criar concurso
 export async function createConcurso(data: ConcursoFormData): Promise<{ data?: Concurso; error?: string }> {
   const supabase = await createServerSupabaseClient()
@@ -70,6 +109,7 @@ export async function createConcurso(data: ConcursoFormData): Promise<{ data?: C
   
   const slug = generateSlug(data.titulo)
   const status = calculateStatus(data)
+  const sanitizedData = sanitizeConcursoData(data)
   
   // Calcular total de vagas
   const vagas_total = (data.vagas_imediatas || 0) + (data.vagas_cr || 0)
@@ -77,7 +117,7 @@ export async function createConcurso(data: ConcursoFormData): Promise<{ data?: C
   const { data: concurso, error } = await supabase
     .from('concursos')
     .insert({
-      ...data,
+      ...sanitizedData,
       slug,
       status,
       vagas_total,
@@ -147,9 +187,12 @@ export async function updateConcurso(
   const merged = { ...current, ...data }
   updates.status = calculateStatus(merged)
   
+  // Sanitizar updates
+  const sanitizedUpdates = sanitizeConcursoData(updates)
+  
   const { data: concurso, error } = await supabase
     .from('concursos')
-    .update(updates)
+    .update(sanitizedUpdates)
     .eq('id', id)
     .select()
     .single()

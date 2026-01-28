@@ -13,6 +13,7 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
 import { AiAssistant } from '@/components/admin/posts/AiAssistant'
+import { SeoSnippetPreview } from '@/components/admin/posts/SeoSnippetPreview'
 
 interface Category {
   id: string;
@@ -34,6 +35,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
    const [slug, setSlug] = useState('')
    const [categoryId, setCategoryId] = useState('')
    const [concursoId, setConcursoId] = useState('')
+   const [seoDescription, setSeoDescription] = useState('')
    const [imageUrl, setImageUrl] = useState('')
    const [authorName, setAuthorName] = useState('')
    const [readingTime, setReadingTime] = useState<number>(5)
@@ -80,6 +82,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                 setPublished(post.published || false)
                 setAuthorName(post.author_name || '')
                 setReadingTime(post.reading_time || 5)
+                setSeoDescription(post.seo_description || '')
             }
         } catch (err) {
             console.error(err)
@@ -131,6 +134,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
                cover_image_url: imageUrl,
                published,
+               seo_description: seoDescription,
+               seo_title: title,
                author_name: authorName,
                reading_time: readingTime,
                updated_at: new Date().toISOString()
@@ -195,6 +200,33 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                onChange={setContent}
                placeholder="Escreva seu artigo com o novo editor rico..."
             />
+
+            <div className="space-y-4 pt-4">
+                <h3 className="text-lg font-medium">Otimização para Mecanismos de Busca (SEO)</h3>
+                
+                <Card>
+                    <CardContent className="p-6 space-y-4">
+                        <div className="space-y-2">
+                            <Label>Meta Descrição</Label>
+                            <Input 
+                                value={seoDescription} 
+                                onChange={e => setSeoDescription(e.target.value)} 
+                                placeholder="Resumo atrativo para aparecer no Google (max 160 caracteres)"
+                                maxLength={160}
+                            />
+                            <p className="text-xs text-muted-foreground text-right">
+                                {seoDescription.length}/160
+                            </p>
+                        </div>
+
+                        <SeoSnippetPreview 
+                            title={title} 
+                            slug={slug} 
+                            description={seoDescription} 
+                        />
+                    </CardContent>
+                </Card>
+            </div>
          </div>
          
          <div className="space-y-6">
