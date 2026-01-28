@@ -25,22 +25,19 @@ export function Header() {
       <div className="container mx-auto px-4 md:px-6 flex h-16 items-center gap-4">
         {/* Logo / Left side */}
         <div className="flex-1 flex items-center">
-          <Link href="/" className="flex items-center space-x-2">
-            {settings?.logoUrl || true ? ( // Force use of logo.svg as default if desired, or just fallback
-               <div className="relative w-32 h-10 brightness-0 invert">
-                 <Image 
-                   src={settings?.logoUrl || "/logo.svg"} 
-                   alt={settings?.siteName || "Gazeta dos Concursos"} 
-                   fill 
-                   className="object-contain object-left" 
-                   priority 
-                 />
-               </div>
-            ) : (
-                <span className="font-black text-xl sm:inline-block tracking-tighter uppercase">
-                  {settings?.siteName || "Gazeta dos Concursos"}
-                </span>
-            )}
+          <Link href="/" className="flex items-center gap-3">
+            <div className="relative w-10 h-10 md:w-12 md:h-12">
+              <Image 
+                src={settings?.logoUrl || "/logo.svg"} 
+                alt={settings?.siteName || "Gazeta dos Concursos"} 
+                fill 
+                className="object-contain" 
+                priority 
+              />
+            </div>
+            <span className="font-black text-lg md:text-xl lg:text-2xl tracking-tighter uppercase leading-none text-white">
+              {settings?.siteName || "Gazeta dos Concursos"}
+            </span>
           </Link>
         </div>
 
