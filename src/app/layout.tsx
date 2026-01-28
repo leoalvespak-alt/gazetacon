@@ -14,6 +14,8 @@ export const metadata: Metadata = {
   description: "Dicas, Notícias e Editais de Concursos Públicos",
 };
 
+import { Toaster } from "@/components/ui/sonner";
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -37,6 +39,7 @@ export default async function RootLayout({
               <Footer />
             </div>
           </SettingsProvider>
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>

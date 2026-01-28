@@ -13,6 +13,7 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
 import { SeoSnippetPreview } from '@/components/admin/posts/SeoSnippetPreview'
+import { AiAssistant } from '@/components/admin/posts/AiAssistant'
 
 export default function CreatePostPage() {
    const router = useRouter()
@@ -66,31 +67,41 @@ export default function CreatePostPage() {
 
        setLoading(true)
        
-       // Pegar ID do usuário (mock ou real se tiver auth)
-       const { data: { user } } = await supabase.auth.getUser()
-       
-       const postData = {
-           title,
-           slug,
-           content,
-           category_id: categoryId,
-           excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
-           cover_image_url: imageUrl || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80', // Default
-           published,
-           seo_title: title,
-           seo_description: seoDescription,
-           author_id: user?.id
-       }
+       try {
+           const { data: { user }, error: userError } = await supabase.auth.getUser()
+           
+           if (userError || !user) {
+               toast.error("Você precisa estar logado para salvar.")
+               setLoading(false)
+               return
+           }
+           
+           const postData = {
+               title,
+               slug,
+               content,
+               category_id: categoryId,
+               excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
+               cover_image_url: imageUrl || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80',
+               published,
+               seo_title: title,
+               seo_description: seoDescription,
+               author_id: user.id
+           }
 
-       const { error } = await supabase.from('posts').insert(postData)
+           const { error: insertError } = await supabase.from('posts').insert(postData)
 
-       if (error) {
-           toast.error("Erro ao salvar: " + error.message)
-       } else {
-           toast.success("Post salvo com sucesso!")
-           router.push('/admin/posts')
+           if (insertError) {
+               toast.error("Erro ao salvar: " + insertError.message)
+           } else {
+               toast.success("Post salvo com sucesso!")
+               router.push('/admin/posts')
+           }
+       } catch (err: any) {
+           toast.error("Erro inesperado: " + (err.message || "Erro desconhecido"))
+       } finally {
+           setLoading(false)
        }
-       setLoading(false)
    }
 
    return (
@@ -161,6 +172,12 @@ export default function CreatePostPage() {
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                       {published ? 'Publicar Agora' : 'Salvar Rascunho'}
                  </Button>
+                 <AiAssistant 
+                    currentContent={content} 
+                    currentTitle={title} 
+                    onUpdateContent={setContent} 
+                    onUpdateTitle={setTitle}
+                  />
              </div>
              
              <Card>

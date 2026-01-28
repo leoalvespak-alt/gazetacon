@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase-browser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -12,10 +12,12 @@ import { RichEditor } from '@/components/admin/posts/RichEditor'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
+import { AiAssistant } from '@/components/admin/posts/AiAssistant'
 
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params)
    const router = useRouter()
+   const supabase = createClient()
    
    const [title, setTitle] = useState('')
    const [content, setContent] = useState('')
@@ -53,7 +55,6 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             setCategoryId(post.category_id)
             setImageUrl(post.cover_image_url)
             setPublished(post.published)
-            // Tags logic would go here if we had a many-to-many junction
         }
         setFetching(false)
      }
@@ -82,29 +83,42 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
 
        setLoading(true)
        
-       const postData = {
-           title,
-           slug,
-           content,
-           category_id: categoryId,
-           excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
-           cover_image_url: imageUrl,
-           published,
-           updated_at: new Date().toISOString()
-       }
+       try {
+           const { data: { user }, error: userError } = await supabase.auth.getUser()
+           
+           if (userError || !user) {
+               toast.error("Você precisa estar logado para salvar.")
+               setLoading(false)
+               return
+           }
 
-       const { error } = await supabase
-            .from('posts')
-            .update(postData)
-            .eq('id', id)
+           const postData = {
+               title,
+               slug,
+               content,
+               category_id: categoryId,
+               excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
+               cover_image_url: imageUrl,
+               published,
+               updated_at: new Date().toISOString()
+           }
 
-       if (error) {
-           toast.error("Erro ao atualizar: " + error.message)
-       } else {
-           toast.success("Post atualizado com sucesso!")
-           router.push('/admin/posts')
+           const { error } = await supabase
+                .from('posts')
+                .update(postData)
+                .eq('id', id)
+
+           if (error) {
+               toast.error("Erro ao atualizar: " + error.message)
+           } else {
+               toast.success("Post atualizado com sucesso!")
+               router.push('/admin/posts')
+           }
+       } catch (err: any) {
+           toast.error("Erro inesperado: " + (err.message || "Erro desconhecido"))
+       } finally {
+           setLoading(false)
        }
-       setLoading(false)
    }
 
    if (fetching) {
@@ -156,6 +170,12 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                       {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin"/>}
                       Salvar Alterações
                  </Button>
+                 <AiAssistant 
+                    currentContent={content} 
+                    currentTitle={title} 
+                    onUpdateContent={setContent} 
+                    onUpdateTitle={setTitle}
+                  />
              </div>
              
              <Card>
