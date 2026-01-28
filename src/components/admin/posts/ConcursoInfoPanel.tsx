@@ -18,7 +18,8 @@ import {
   FileDown,
   ChevronDown,
   ChevronUp,
-  Loader2
+  Loader2,
+  ListPlus
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -143,6 +144,45 @@ export function ConcursoInfoPanel({
       badge: null
     }
   }
+  
+  const handleInsertSummary = () => {
+    if (!concurso || !onInsertContent) return
+
+    const bancaInfo = getBancaInfo()
+    
+    // Constrói um HTML bonito para o resumo
+    let summaryHtml = `
+      <h3>Resumo do Concurso ${concurso.titulo}</h3>
+      <ul>
+        <li><strong>Órgão:</strong> ${concurso.orgao}</li>
+        <li><strong>Situação:</strong> ${STATUS_LABELS[concurso.status as ConcursoStatus] || concurso.status}</li>
+        <li><strong>Banca:</strong> ${bancaInfo.text} ${bancaInfo.status !== 'definida' && bancaInfo.badge ? `(${bancaInfo.badge})` : ''}</li>
+        ${concurso.vagas_total > 0 ? `<li><strong>Vagas:</strong> ${concurso.vagas_total} ${concurso.vagas_cr > 0 ? `(${concurso.vagas_imediatas} imediatas + ${concurso.vagas_cr} CR)` : ''}</li>` : ''}
+        ${concurso.salario_max ? `<li><strong>Salário:</strong> ${concurso.salario_min ? `De ${formatCurrency(concurso.salario_min)} a ` : 'Até '}${formatCurrency(concurso.salario_max)}</li>` : ''}
+        ${concurso.escolaridade ? `<li><strong>Escolaridade:</strong> ${concurso.escolaridade}</li>` : ''}
+        ${(concurso.cidade || concurso.estado) ? `<li><strong>Local:</strong> ${concurso.cidade ? `${concurso.cidade}, ` : ''}${concurso.estado || 'Nacional'}</li>` : ''}
+        ${concurso.data_inscricao_inicio && concurso.data_inscricao_fim ? `<li><strong>Inscrições:</strong> de ${formatDate(concurso.data_inscricao_inicio)} a ${formatDate(concurso.data_inscricao_fim)}</li>` : ''}
+        ${concurso.data_prova ? `<li><strong>Prova:</strong> ${formatDate(concurso.data_prova)}</li>` : ''}
+      </ul>
+    `
+    
+    // Adiciona links se houver
+    if (concurso.edital_url || concurso.site_oficial) {
+      summaryHtml += `<p>`
+      if (concurso.edital_url) {
+        summaryHtml += `<a href="${concurso.edital_url}" target="_blank" rel="noopener noreferrer"><strong>📄 Baixar Edital</strong></a> `
+      }
+      if (concurso.edital_url && concurso.site_oficial) {
+        summaryHtml += ` | `
+      }
+      if (concurso.site_oficial) {
+        summaryHtml += `<a href="${concurso.site_oficial}" target="_blank" rel="noopener noreferrer"><strong>🌐 Site da Banca</strong></a>`
+      }
+      summaryHtml += `</p>`
+    }
+
+    onInsertContent(summaryHtml)
+  }
 
   const handleInsertInfo = (type: 'vagas' | 'salario' | 'prazo' | 'banca' | 'edital') => {
     if (!concurso || !onInsertContent) return
@@ -247,6 +287,15 @@ export function ConcursoInfoPanel({
         </CardHeader>
         
         <CardContent className="space-y-4">
+          <Button 
+            variant="default" 
+            className="w-full h-8 text-xs gap-2 mb-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0"
+            onClick={handleInsertSummary}
+          >
+            <ListPlus className="h-3.5 w-3.5" />
+            Inserir Resumo Completo
+          </Button>
+
           {/* Informações principais */}
           <div className="grid gap-2 text-xs">
             {/* Órgão */}

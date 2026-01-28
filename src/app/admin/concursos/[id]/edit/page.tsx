@@ -31,13 +31,13 @@ import {
   ABRANGENCIA_LABELS,
   ESCOLARIDADE_LABELS,
   ESTADOS_BR,
-  BANCAS_COMUNS,
   Escolaridade,
   STATUS_LABELS,
   ConcursoStatus
 } from "@/types/concurso"
 import { ConcursoStatusBadge } from "@/components/admin/ConcursoStatusBadge"
 import { toast } from "sonner"
+import { BancaSelector } from "@/components/admin/concursos/BancaSelector"
 
 export default function EditConcursoPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -278,19 +278,13 @@ export default function EditConcursoPage({ params }: { params: Promise<{ id: str
               
               {formData.status !== "sem_previsao" && (
                 <>
-                  <div className="space-y-2">
-                    <Label htmlFor="banca">Banca Organizadora</Label>
-                    <select
-                      id="banca"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      value={formData.banca}
-                      onChange={(e) => handleChange("banca", e.target.value)}
-                    >
-                      <option value="">Selecione a banca</option>
-                      {BANCAS_COMUNS.map((banca) => (
-                        <option key={banca} value={banca}>{banca}</option>
-                      ))}
-                    </select>
+                  <div className="space-y-2 flex flex-col">
+                    <Label htmlFor="banca" className="mb-1">Banca Organizadora</Label>
+                    <BancaSelector 
+                        value={formData.banca}
+                        onChange={(val) => handleChange("banca", val)}
+                        placeholder="Selecione ou crie a banca..."
+                    />
                   </div>
                   
                   {formData.banca && (
@@ -309,23 +303,17 @@ export default function EditConcursoPage({ params }: { params: Promise<{ id: str
                     </div>
                   )}
                   
-                  <div className="space-y-2">
-                    <Label htmlFor="banca_ultimo_concurso">
+                  <div className="space-y-2 flex flex-col">
+                    <Label htmlFor="banca_ultimo_concurso" className="mb-1">
                       Banca do Último Concurso
                       <span className="ml-1 text-xs text-muted-foreground">(referência)</span>
                     </Label>
-                    <select
-                      id="banca_ultimo_concurso"
-                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                      value={formData.banca_ultimo_concurso || ""}
-                      onChange={(e) => handleChange("banca_ultimo_concurso", e.target.value)}
-                    >
-                      <option value="">Não informado</option>
-                      {BANCAS_COMUNS.map((banca) => (
-                        <option key={banca} value={banca}>{banca}</option>
-                      ))}
-                    </select>
-                    <p className="text-xs text-muted-foreground">
+                    <BancaSelector 
+                        value={formData.banca_ultimo_concurso}
+                        onChange={(val) => handleChange("banca_ultimo_concurso", val)}
+                        placeholder="Selecione ou crie a banca..."
+                    />
+                    <p className="text-xs text-muted-foreground mt-1">
                       Útil quando a banca atual ainda não foi definida - serve como referência para os candidatos.
                     </p>
                   </div>

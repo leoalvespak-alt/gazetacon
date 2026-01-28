@@ -477,3 +477,52 @@ export async function duplicateConcurso(id: string): Promise<{ data?: Concurso; 
   revalidatePath('/admin/concursos')
   return { data: newConcurso }
 }
+
+// =============================================
+// AÇÕES DE BANCAS
+// =============================================
+
+// Listar todas as bancas
+export async function getBancas(): Promise<{ data?: string[]; error?: string }> {
+  const supabase = await createServerSupabaseClient()
+  
+  const { data, error } = await supabase
+    .from('bancas')
+    .select('nome')
+    .order('nome')
+  
+  if (error) {
+    return { error: error.message }
+  }
+  
+  return { data: data.map((b: { nome: string }) => b.nome) }
+}
+
+// Criar nova banca
+export async function createBanca(nome: string): Promise<{ data?: string; error?: string }> {
+  const supabase = await createServerSupabaseClient()
+  
+  // Verifica se já existe (case insensitive)
+  const { data: existing } = await supabase
+    .from('bancas')
+    .select('nome')
+    .ilike('nome', nome)
+    .single()
+    
+  if (existing) {
+    return { data: existing.nome }
+  }
+  
+  const { data, error } = await supabase
+    .from('bancas')
+    .insert({ nome })
+    .select('nome')
+    .single()
+  
+  if (error) {
+    return { error: error.message }
+  }
+  
+  revalidatePath('/admin/concursos')
+  return { data: data.nome }
+}
