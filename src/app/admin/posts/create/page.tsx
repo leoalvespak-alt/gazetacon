@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { createClient } from '@/lib/supabase-browser' // Use local client
+import { createClient } from '@/lib/supabase-browser'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -20,6 +20,11 @@ interface Category {
   name: string;
 }
 
+interface Concurso {
+  id: string;
+  titulo: string;
+}
+
 export default function CreatePostPage() {
    const router = useRouter()
    const [title, setTitle] = useState('')
@@ -27,28 +32,35 @@ export default function CreatePostPage() {
    const [slug, setSlug] = useState('')
    const [seoDescription, setSeoDescription] = useState('')
    const [categoryId, setCategoryId] = useState('')
+   const [concursoId, setConcursoId] = useState('')
    const [imageUrl, setImageUrl] = useState('')
    const [authorName, setAuthorName] = useState('')
    const [readingTime, setReadingTime] = useState<number>(5)
    const [published, setPublished] = useState(false)
    const [loading, setLoading] = useState(false)
    const [categories, setCategories] = useState<Category[]>([])
+   const [concursos, setConcursos] = useState<Concurso[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
    const supabase = createClient()
 
-   // Efeito para carregar categorias
    useEffect(() => {
-     const fetchCats = async () => {
-        const { data } = await supabase.from('categories').select('id, name')
-        if (data) setCategories(data as Category[])
-     }
-     fetchCats()
-   }, [])
+     const fetchData = async () => {
+        const { data: catData } = await supabase.from('categories').select('id, name')
+        if (catData) setCategories(catData as Category[])
 
-   // Auto-gerar slug
+        const { data: concData } = await supabase.from('concursos').select('id, titulo').order('titulo')
+        if (concData) setConcursos(concData as Concurso[])
+     }
+     fetchData()
+   }, [supabase])
+
    useEffect(() => {
-      const generated = title.toLowerCase().replace(/ /g, '-').normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+      const generated = title.toLowerCase()
+        .replace(/ /g, '-')
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\w-]/g, "")
       setSlug(generated)
    }, [title])
 
@@ -88,6 +100,7 @@ export default function CreatePostPage() {
                slug,
                content,
                category_id: categoryId,
+               concurso_id: concursoId || null,
                excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
                cover_image_url: imageUrl || 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&q=80',
                published,
@@ -95,7 +108,7 @@ export default function CreatePostPage() {
                seo_description: seoDescription,
                author_id: user.id,
                author_name: authorName,
-               reading_time: readingTime
+               reading_time: readingTime,
            }
 
            const { error: insertError } = await supabase.from('posts').insert(postData)

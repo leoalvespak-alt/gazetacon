@@ -214,7 +214,7 @@ export default function ConcursosPage() {
                     Todos
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                  {(Object.entries(STATUS_LABELS) as [ConcursoStatus, string][]).map(([key, label]) => (
                     <DropdownMenuItem key={key} onClick={() => setStatusFilter(key)}>
                       {label}
                     </DropdownMenuItem>

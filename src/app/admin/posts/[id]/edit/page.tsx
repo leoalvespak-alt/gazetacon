@@ -19,6 +19,11 @@ interface Category {
   name: string;
 }
 
+interface Concurso {
+  id: string;
+  titulo: string;
+}
+
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params)
    const router = useRouter()
@@ -28,6 +33,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
    const [content, setContent] = useState('')
    const [slug, setSlug] = useState('')
    const [categoryId, setCategoryId] = useState('')
+   const [concursoId, setConcursoId] = useState('')
    const [imageUrl, setImageUrl] = useState('')
    const [authorName, setAuthorName] = useState('')
    const [readingTime, setReadingTime] = useState<number>(5)
@@ -35,40 +41,55 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
    const [loading, setLoading] = useState(false)
    const [fetching, setFetching] = useState(true)
    const [categories, setCategories] = useState<Category[]>([])
+   const [concursos, setConcursos] = useState<Concurso[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
 
    useEffect(() => {
      const fetchData = async () => {
         setFetching(true)
-        // Categorias
-        const { data: catData } = await supabase.from('categories').select('id, name')
-        if (catData) setCategories(catData as Category[])
+        try {
+            // Categorias
+            const { data: catData } = await supabase.from('categories').select('id, name')
+            if (catData) setCategories(catData as Category[])
 
-        // Post
-        const { data: post, error } = await supabase
-            .from('posts')
-            .select('*')
-            .eq('id', id)
-            .single()
+            // Concursos
+            const { data: concData } = await supabase.from('concursos').select('id, titulo').order('titulo')
+            if (concData) setConcursos(concData as Concurso[])
 
-        if (error) {
-            toast.error("Erro ao carregar post")
-            router.push('/admin/posts')
-        } else if (post) {
-            setTitle(post.title || '')
-            setContent(post.content || '')
-            setSlug(post.slug || '')
-            setCategoryId(post.category_id || '')
-            setImageUrl(post.cover_image_url || '')
-            setPublished(post.published || false)
-            setAuthorName(post.author_name || '')
-            setReadingTime(post.reading_time || 5)
+            // Post
+            const { data: post, error } = await supabase
+                .from('posts')
+                .select('*')
+                .eq('id', id)
+                .single()
+
+            if (error) {
+                toast.error("Erro ao carregar post")
+                router.push('/admin/posts')
+                return
+            }
+            
+            if (post) {
+                setTitle(post.title || '')
+                setContent(post.content || '')
+                setSlug(post.slug || '')
+                setCategoryId(post.category_id || '')
+                setConcursoId(post.concurso_id || '')
+                setImageUrl(post.cover_image_url || '')
+                setPublished(post.published || false)
+                setAuthorName(post.author_name || '')
+                setReadingTime(post.reading_time || 5)
+            }
+        } catch (err) {
+            console.error(err)
+            toast.error("Erro ao carregar dados")
+        } finally {
+            setFetching(false)
         }
-        setFetching(false)
      }
      fetchData()
-   }, [id, router])
+   }, [id, router, supabase])
 
    const handleAddTag = (e: React.KeyboardEvent) => {
        if (e.key === 'Enter' && tagInput.trim()) {
@@ -106,9 +127,12 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                slug,
                content,
                category_id: categoryId,
+               concurso_id: concursoId || null,
                excerpt: content.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...",
                cover_image_url: imageUrl,
                published,
+               author_name: authorName,
+               reading_time: readingTime,
                updated_at: new Date().toISOString()
            }
 
@@ -214,6 +238,20 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                           <option value="">Selecione...</option>
                           {categories.map(cat => (
                               <option key={cat.id} value={cat.id}>{cat.name}</option>
+                          ))}
+                       </select>
+                   </div>
+
+                   <div className="space-y-2">
+                      <Label>Concurso Relacionado (Opcional)</Label>
+                       <select 
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                            value={concursoId}
+                            onChange={(e) => setConcursoId(e.target.value)}
+                        >
+                          <option value="">Nenhum</option>
+                          {concursos.map(conc => (
+                              <option key={conc.id} value={conc.id}>{conc.titulo}</option>
                           ))}
                        </select>
                    </div>
