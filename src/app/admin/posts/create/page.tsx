@@ -14,6 +14,7 @@ import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
 import { SeoSnippetPreview } from '@/components/admin/posts/SeoSnippetPreview'
 import { AiAssistant } from '@/components/admin/posts/AiAssistant'
+import { ConcursoInfoPanel } from '@/components/admin/posts/ConcursoInfoPanel'
 
 interface Category {
   id: string;
@@ -119,8 +120,9 @@ export default function CreatePostPage() {
                toast.success("Post salvo com sucesso!")
                router.push('/admin/posts')
            }
-       } catch (err: any) {
-           toast.error("Erro inesperado: " + (err.message || "Erro desconhecido"))
+       } catch (err: unknown) {
+           const errorMessage = err instanceof Error ? err.message : "Erro desconhecido"
+           toast.error("Erro inesperado: " + errorMessage)
        } finally {
            setLoading(false)
        }
@@ -246,6 +248,20 @@ export default function CreatePostPage() {
                           ))}
                        </select>
                    </div>
+
+                   {/* Painel de informações do concurso */}
+                   <ConcursoInfoPanel 
+                     concursoId={concursoId || null}
+                     onInsertContent={(text) => {
+                       // Insere texto no conteúdo atual
+                       setContent(prev => prev.replace('</p>', ` ${text}</p>`))
+                     }}
+                     onInsertLink={(text, url) => {
+                       // Insere link no conteúdo atual
+                       const linkHtml = `<a href="${url}" target="_blank" rel="noopener noreferrer">${text}</a>`
+                       setContent(prev => prev.replace('</p>', ` ${linkHtml}</p>`))
+                     }}
+                   />
                    
                    <div className="space-y-2">
                        <Label>Slug</Label>

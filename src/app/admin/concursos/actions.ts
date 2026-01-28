@@ -81,6 +81,7 @@ function sanitizeConcursoData(data: Partial<ConcursoFormData>) {
   // Outros campos que devem ser null se vazios
   const nullableFields = [
     'banca', 
+    'banca_ultimo_concurso',
     'estado', 
     'cidade', 
     'edital_url', 

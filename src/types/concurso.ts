@@ -44,6 +44,8 @@ export interface Concurso {
   slug: string
   orgao: string
   banca: string | null
+  banca_ultimo_concurso: string | null
+  banca_definida: boolean
   
   vagas_total: number
   vagas_imediatas: number
@@ -83,6 +85,8 @@ export interface ConcursoFormData {
   titulo: string
   orgao: string
   banca?: string
+  banca_ultimo_concurso?: string
+  banca_definida?: boolean
   area?: ConcursoArea
   abrangencia?: ConcursoAbrangencia
   estado?: string

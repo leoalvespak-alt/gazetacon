@@ -8,7 +8,6 @@ import { ArrowLeft, Save, Plus, X, Loader2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
 import { Switch } from "@/components/ui/switch"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -39,6 +38,8 @@ export default function CreateConcursoPage() {
     titulo: "",
     orgao: "",
     banca: "",
+    banca_ultimo_concurso: "",
+    banca_definida: false,
     area: undefined,
     abrangencia: "nacional",
     estado: "",
@@ -180,20 +181,59 @@ export default function CreateConcursoPage() {
               </div>
               
               {formData.status !== "sem_previsao" && (
-                <div className="space-y-2">
-                  <Label htmlFor="banca">Banca Organizadora</Label>
-                  <select
-                    id="banca"
-                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                    value={formData.banca}
-                    onChange={(e) => handleChange("banca", e.target.value)}
-                  >
-                    <option value="">Selecione a banca</option>
-                    {BANCAS_COMUNS.map((banca) => (
-                      <option key={banca} value={banca}>{banca}</option>
-                    ))}
-                  </select>
-                </div>
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="banca">Banca Organizadora</Label>
+                    <select
+                      id="banca"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      value={formData.banca}
+                      onChange={(e) => handleChange("banca", e.target.value)}
+                    >
+                      <option value="">Selecione a banca</option>
+                      {BANCAS_COMUNS.map((banca) => (
+                        <option key={banca} value={banca}>{banca}</option>
+                      ))}
+                    </select>
+                  </div>
+                  
+                  {formData.banca && (
+                    <div className="flex items-center gap-3 p-3 bg-muted rounded-lg">
+                      <Switch
+                        id="banca_definida"
+                        checked={formData.banca_definida || false}
+                        onCheckedChange={(checked) => handleChange("banca_definida", checked)}
+                      />
+                      <Label htmlFor="banca_definida" className="flex flex-col gap-0.5 cursor-pointer">
+                        <span className="font-medium">Banca Oficialmente Definida</span>
+                        <span className="text-xs text-muted-foreground">
+                          Marque se a banca foi confirmada oficialmente pelo edital
+                        </span>
+                      </Label>
+                    </div>
+                  )}
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="banca_ultimo_concurso">
+                      Banca do Último Concurso
+                      <span className="ml-1 text-xs text-muted-foreground">(referência)</span>
+                    </Label>
+                    <select
+                      id="banca_ultimo_concurso"
+                      className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                      value={formData.banca_ultimo_concurso || ""}
+                      onChange={(e) => handleChange("banca_ultimo_concurso", e.target.value)}
+                    >
+                      <option value="">Não informado</option>
+                      {BANCAS_COMUNS.map((banca) => (
+                        <option key={banca} value={banca}>{banca}</option>
+                      ))}
+                    </select>
+                    <p className="text-xs text-muted-foreground">
+                      Útil quando a banca atual ainda não foi definida - serve como referência para os candidatos.
+                    </p>
+                  </div>
+                </>
               )}
               
               <div className="space-y-2">

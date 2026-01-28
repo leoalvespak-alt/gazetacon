@@ -1,0 +1,84 @@
+﻿
+> blog@0.1.0 build
+> next build
+
+node.exe : ÔÜá Warning: Next.js inferred your workspace 
+root, but it may not be correct.
+No linha:1 caractere:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program 
+Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ÔÜá Warning 
+   : Ne...not be correct.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+ We detected multiple lockfiles and selected the 
+directory of C:\Users\Lenovo\package-lock.json as the 
+root directory.
+ To silence this warning, set `turbopack.root` in your 
+Next.js config, or consider removing one of the 
+lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/n
+ext-config-js/turbopack#root-directory for more 
+information.
+ Detected additional lockfiles: 
+   * C:\Users\Lenovo\Desktop\Rota de Ataque\BLOG 
+CONCURSOS\package-lock.json
+
+Ôû▓ Next.js 16.1.1 (Turbopack)
+- Environments: .env.local
+
+ÔÜá The "middleware" file convention is deprecated. 
+Please use "proxy" instead. Learn more: 
+https://nextjs.org/docs/messages/middleware-to-proxy
+  Creating an optimized production build ...
+Ô£ô Compiled successfully in 32.9s
+  Running TypeScript ...
+  Collecting page data using 3 workers ...
+  Generating static pages using 3 workers (0/24) ...
+  Generating static pages using 3 workers (6/24) 
+  Generating static pages using 3 workers (12/24) 
+  Generating static pages using 3 workers (18/24) 
+Ô£ô Generating static pages using 3 workers (24/24) in 4.5s
+  Finalizing page optimization ...
+
+Route (app)
+Ôöî ãÆ /
+Ôö£ Ôùï /_not-found
+Ôö£ Ôùï /admin
+Ôö£ Ôùï /admin/affiliates
+Ôö£ Ôùï /admin/ai
+Ôö£ Ôùï /admin/calendar
+Ôö£ Ôùï /admin/categories
+Ôö£ Ôùï /admin/concursos
+Ôö£ ãÆ /admin/concursos/[id]/edit
+Ôö£ Ôùï /admin/concursos/create
+Ôö£ Ôùï /admin/posts
+Ôö£ ãÆ /admin/posts/[id]/edit
+Ôö£ Ôùï /admin/posts/create
+Ôö£ Ôùï /admin/provas
+Ôö£ ãÆ /admin/provas/[id]/edit
+Ôö£ Ôùï /admin/provas/create
+Ôö£ Ôùï /admin/settings
+Ôö£ Ôùï /admin/users
+Ôö£ Ôùï /admin/users/logs
+Ôö£ ãÆ /api/ai/generate
+Ôö£ ãÆ /blog/[slug]
+Ôö£ ãÆ /category/[slug]
+Ôö£ Ôùï /contato
+Ôö£ ãÆ /go/[slug]
+Ôö£ Ôùï /login
+Ôö£ ãÆ /privacidade
+Ôö£ Ôùï /provas
+Ôö£ Ôùï /search
+Ôö£ Ôùï /sitemap.xml
+Ôö£ Ôùï /sobre
+Ôöö ãÆ /termos
+
+
+ãÆ Proxy (Middleware)
+
+Ôùï  (Static)   prerendered as static content
+ãÆ  (Dynamic)  server-rendered on demand
+
