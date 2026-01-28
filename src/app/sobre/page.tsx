@@ -3,88 +3,99 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Quem Somos | Gazeta dos Concursos",
   description:
-    "Conheça a missão, visão e valores da Gazeta dos Concursos, seu portal confiável para notícias e editais.",
+    "O fim do ruído na sua preparação. Conheça a Gazeta dos Concursos, um ecossistema Clean & No-Ads focado na sua aprovação.",
 };
 
 export default function SobrePage() {
   return (
-    <div className="container mx-auto px-4 py-12 md:py-16 max-w-4xl">
-      <div className="space-y-12">
-        {/* Header Section */}
-        <section className="text-center space-y-4">
-          <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
-            Quem Somos
+    <div className="container mx-auto px-6 py-16 md:py-24 max-w-3xl">
+      <article className="prose prose-stone dark:prose-invert prose-lg md:prose-xl mx-auto leading-relaxed">
+        
+        {/* Header Minimalista */}
+        <div className="text-center mb-16 space-y-6">
+          <h1 className="font-extrabold tracking-tight text-4xl md:text-5xl lg:text-6xl mb-4">
+            O fim do ruído na sua <span className="text-primary italic">preparação</span>.
           </h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            A sua fonte mais rápida e confiável sobre o mundo dos concursos
-            públicos no Brasil.
-          </p>
-        </section>
+          <div className="w-24 h-1 bg-primary mx-auto rounded-full"></div>
+        </div>
 
-        {/* Mission Section */}
-        <section className="grid md:grid-cols-2 gap-8 items-center bg-card rounded-2xl p-8 shadow-sm border">
-          <div className="space-y-4">
-            <h2 className="text-2xl font-semibold text-primary">
-              Nossa Missão
-            </h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Democratizar o acesso à informação de qualidade sobre concursos
-              públicos, empoderando candidatos com notícias verificadas,
-              análises precisas e materiais que transformam vidas através da
-              educação e do serviço público.
+        {/* Intro */}
+        <p className="font-medium text-2xl text-muted-foreground leading-relaxed mb-10">
+          A <strong className="text-foreground">Gazeta dos Concursos</strong> não é apenas mais um portal de notícias. É uma resposta direta à frustração de milhares de estudantes: a dificuldade de encontrar informação confiável em meio a um mar de anúncios, pop-ups e sensacionalismo.
+        </p>
+
+        <p className="text-xl">
+          Nós decidimos fazer o caminho inverso.
+        </p>
+
+        <p>
+          Enquanto o mercado luta por cliques, nós lutamos pela sua <strong>concentração</strong>. Somos um ecossistema de preparação de alto nível, desenhado para quem entende que tempo é o ativo mais valioso de um concurseiro.
+        </p>
+
+        <div className="my-16 border-l-4 border-primary pl-6 py-2 italic text-2xl font-serif text-muted-foreground">
+          "Leia, planeje, estude. Sem distrações."
+        </div>
+
+        {/* O Que Nos Define */}
+        <h2 className="text-3xl font-bold tracking-tight mt-16 mb-8 text-foreground">O Que Nos Define</h2>
+
+        <div className="space-y-12">
+          {/* Item 1 */}
+          <div className="group">
+            <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-3">
+              <span className="text-primary/40 group-hover:text-primary/80">01.</span> Zero Anúncios, Foco Total
+            </h3>
+            <p className="mt-4 text-lg">
+              Você não verá banners piscando, vídeos automáticos ou poluição visual em nossas páginas. Nossa interface é limpa, rápida e respeita o seu momento de estudo. Acreditamos que a leitura de um edital ou a resolução de uma prova exige <strong>paz mental</strong>.
             </p>
           </div>
-          <div className="h-48 md:h-full bg-secondary/30 rounded-xl flex items-center justify-center">
-            {/* Placeholder for an image or illustration */}
-            <span className="text-4xl">🎯</span>
-          </div>
-        </section>
 
-        {/* Values Section */}
-        <section className="space-y-8">
-          <h2 className="text-3xl font-bold text-center">Nossos Valores</h2>
-          <div className="grid sm:grid-cols-3 gap-6">
-            {[
-              {
-                icon: "⚡",
-                title: "Agilidade",
-                desc: "Notícias em tempo real para você não perder nenhum prazo.",
-              },
-              {
-                icon: "🛡️",
-                title: "Credibilidade",
-                desc: "Checagem rigorosa dos fatos. Sem fake news, apenas a verdade.",
-              },
-              {
-                icon: "🤝",
-                title: "Compromisso",
-                desc: "Estamos ao lado do concurseiro em cada etapa da jornada.",
-              },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="flex flex-col items-center text-center p-6 rounded-xl border bg-card hover:shadow-md transition-shadow"
-              >
-                <div className="text-4xl mb-4">{item.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-sm text-muted-foreground">{item.desc}</p>
-              </div>
-            ))}
+          {/* Item 2 */}
+          <div className="group">
+            <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-3">
+              <span className="text-primary/40 group-hover:text-primary/80">02.</span> Curadoria de Elite (Fiscal & Policial)
+            </h3>
+            <p className="mt-4 text-lg">
+              Não atiramos para todos os lados. Nosso foco central são as carreiras de Estado (Polícia, Fisco, Controle e Jurídico). Não vamos desperdiçar sua atenção com concursos irrelevantes apenas para gerar volume. <strong>Se está na Gazeta, é relevante.</strong>
+            </p>
           </div>
-        </section>
 
-        {/* Story/Team Section */}
-        <section className="prose prose-slate dark:prose-invert max-w-none">
-          <h3>Nossa História</h3>
-          <p>
-            A Gazeta dos Concursos nasceu da necessidade de um portal
-            jornalístico sério e focado exclusivamente no nicho de concursos.
-            Fundada por especialistas em educação e jornalismo, nosso objetivo é
-            limpar o ruído da desinformação e entregar o que realmente importa
-            para a sua aprovação.
+          {/* Item 3 */}
+          <div className="group">
+            <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-3">
+              <span className="text-primary/40 group-hover:text-primary/80">03.</span> Informação sem Filtro (Nem Hype)
+            </h3>
+            <p className="mt-4 text-lg">
+              Nosso sistema de rastreamento de concursos separa claramente o que é Rumor, Autorizado ou Edital Publicado. Se não temos certeza, nós dizemos. Não criamos falsas expectativas para vender cursos. Nossa linha editorial é pautada na <strong>verdade técnica</strong> e na análise fria dos dados.
+            </p>
+          </div>
+
+          {/* Item 4 */}
+          <div className="group">
+            <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors flex items-center gap-3">
+              <span className="text-primary/40 group-hover:text-primary/80">04.</span> Tecnologia a Favor da Aprovação
+            </h3>
+            <p className="mt-4 text-lg">
+              Somos movidos por dados. Oferecemos um repositório organizado de provas passadas, editais verticalizados e ferramentas de estudo ativo. Tudo acessível em poucos cliques, sem burocracia.
+            </p>
+          </div>
+        </div>
+
+        {/* Missão */}
+        <div className="mt-20 bg-muted/30 p-8 md:p-12 rounded-2xl border border-border/50 text-center">
+          <h2 className="text-2xl font-bold uppercase tracking-widest text-muted-foreground mb-6 text-sm">Nossa Missão</h2>
+          <p className="text-2xl md:text-3xl font-bold leading-relaxed text-foreground">
+            Ser o parceiro estratégico do concurseiro profissional. Fornecer a clareza necessária para que você tome as melhores decisões sobre sua carreira e sua preparação.
           </p>
-        </section>
-      </div>
+        </div>
+
+        {/* Assinatura */}
+        <div className="mt-24 text-center border-t pt-10">
+           <p className="font-serif italic text-2xl text-foreground">Equipe Editorial</p>
+           <p className="text-sm font-bold uppercase tracking-widest text-primary mt-2">Gazeta dos Concursos</p>
+        </div>
+
+      </article>
     </div>
   );
 }
