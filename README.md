@@ -1,36 +1,121 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏛️ Gazeta dos Concursos
 
-## Getting Started
+Portal completo de concursos públicos com CMS administrativo integrado.
 
-First, run the development server:
+## 🚀 Stack Tecnológica
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Framework:** Next.js 16+ (App Router)
+- **Estilização:** Tailwind CSS v4
+- **Componentes:** Shadcn UI
+- **Ícones:** Lucide React
+- **Banco de Dados:** Supabase (PostgreSQL)
+- **IA:** Google Gemini 2.5 Flash
+
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── app/
+│   ├── (public)/          # Páginas públicas
+│   │   └── provas/        # Banco de provas público
+│   ├── admin/             # Área administrativa
+│   │   ├── ai/            # Assistente IA
+│   │   ├── calendar/      # Calendário editorial
+│   │   ├── categories/    # Gerenciar categorias
+│   │   ├── concursos/     # CRUD de concursos
+│   │   ├── posts/         # CRUD de posts
+│   │   ├── provas/        # CRUD de provas
+│   │   ├── settings/      # Configurações do sistema
+│   │   └── users/         # Gestão de usuários
+│   ├── blog/              # Páginas de artigos
+│   └── login/             # Autenticação
+├── components/
+│   ├── admin/             # Componentes do admin
+│   ├── blog/              # Componentes do blog
+│   └── ui/                # Componentes Shadcn
+├── hooks/                 # Custom hooks
+├── lib/                   # Utilities e configs
+└── types/                 # Definições TypeScript
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚙️ Variáveis de Ambiente
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Crie um arquivo `.env.local` na raiz do projeto:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sua-anon-key
+SUPABASE_SERVICE_ROLE_KEY=sua-service-role-key
 
-## Learn More
+# Gemini AI
+GEMINI_API_KEY=sua-api-key-do-gemini
+```
 
-To learn more about Next.js, take a look at the following resources:
+## 🗃️ Configuração do Banco de Dados
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. Acesse o [Supabase Dashboard](https://app.supabase.com)
+2. Vá em **SQL Editor**
+3. Execute o arquivo `supa/EXECUTE_THIS.sql`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🛠️ Instalação
 
-## Deploy on Vercel
+```bash
+# Instalar dependências
+npm install
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Rodar em desenvolvimento
+npm run dev
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Build para produção
+npm run build
+```
+
+## 📦 Funcionalidades
+
+### Área Pública
+
+- ✅ Home com posts em destaque
+- ✅ Blog com artigos completos
+- ✅ Banco de provas com filtros
+- ✅ Busca de conteúdo
+- ✅ Dark/Light mode
+
+### Área Administrativa
+
+- ✅ Dashboard com métricas
+- ✅ CRUD completo de Posts
+- ✅ CRUD completo de Concursos
+- ✅ CRUD completo de Provas
+- ✅ Gestão de Categorias
+- ✅ Gestão de Usuários e Roles
+- ✅ Logs de Atividade
+- ✅ Calendário Editorial + Kanban
+- ✅ Assistente IA (geração de títulos, SEO)
+- ✅ Configurações do Sistema
+
+### Integrações
+
+- ✅ Supabase Auth
+- ✅ Supabase Storage
+- ✅ Google Gemini AI
+- ✅ Google Analytics (configurável)
+
+## 👥 Roles de Usuário
+
+| Role     | Permissões                     |
+| -------- | ------------------------------ |
+| `admin`  | Acesso total                   |
+| `editor` | Criar/editar posts e concursos |
+| `author` | Criar rascunhos                |
+
+## 🎨 Cores do Tema
+
+As cores podem ser configuradas em `/admin/settings`:
+
+- Cor primária: Azul institucional
+- Cor de destaque: Laranja/Âmbar
+
+## 📝 Licença
+
+MIT © Gazeta dos Concursos

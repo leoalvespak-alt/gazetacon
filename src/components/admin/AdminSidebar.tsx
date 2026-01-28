@@ -9,7 +9,9 @@ import {
   LogOut,
   Users,
   Trophy,
-  FileCheck
+  FileCheck,
+  CalendarDays,
+  Sparkles
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -31,8 +33,10 @@ export function AdminSidebar() {
     { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { href: "/admin/posts", label: "Posts", icon: FileText },
     { href: "/admin/concursos", label: "Concursos", icon: Trophy },
-    { href: "/admin/categories", label: "Categorias", icon: Tags },
     { href: "/admin/provas", label: "Provas", icon: FileCheck },
+    { href: "/admin/calendar", label: "Calendário", icon: CalendarDays },
+    { href: "/admin/ai", label: "Assistente IA", icon: Sparkles },
+    { href: "/admin/categories", label: "Categorias", icon: Tags },
     { href: "/admin/users", label: "Usuários", icon: Users },
     { href: "/admin/settings", label: "Configurações", icon: Settings },
   ]
