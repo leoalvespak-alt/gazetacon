@@ -7,6 +7,22 @@ import Link from "next/link"
 
 export const dynamic = "force-dynamic";
 
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+}
+
+interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  cover_image_url: string;
+  created_at: string;
+  categories: { name: string };
+}
+
 export default async function Home() {
   // Fetch posts with categories
   const { data: posts } = await supabase
@@ -16,49 +32,55 @@ export default async function Home() {
     .order('created_at', { ascending: false })
 
   // Fetch all categories for the filter bar
-  const { data: categories } = await supabase
+  const { data: categoriesData } = await supabase
     .from('categories')
     .select('*')
     .order('name')
 
-  const hasPosts = posts && posts.length > 0
-  const featuredPosts = posts?.slice(0, 4) || []
-  const remainingPosts = posts?.slice(4) || []
+  const categories = (categoriesData || []) as Category[]
+  const postsData = (posts || []) as Post[]
+
+  const hasPosts = postsData.length > 0
+  const featuredPosts = postsData.slice(0, 4)
+  const remainingPosts = postsData.slice(4)
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-background">
       {!hasPosts ? (
         <EmptyState />
       ) : (
         <>
-          {/* Main Content Area Starts Immediately */}
+          {/* Main Content Area */}
           <FeaturedGrid posts={featuredPosts} />
           
-          {/* Categories Bar - Refined */}
-          <section className="border-y bg-background/80 backdrop-blur sticky top-[56px] z-20 overflow-x-auto">
-            <div className="container mx-auto px-4 md:px-6 py-3 flex items-center gap-3 whitespace-nowrap scrollbar-hide">
-              <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest mr-2">Explorar</span>
-              <Badge variant="default" className="cursor-pointer rounded-full px-4">Todos</Badge>
-              {categories?.map((cat: any) => (
-                <Link key={cat.id} href={`/category/${cat.slug}`}>
-                  <Badge variant="secondary" className="cursor-pointer rounded-full px-4 hover:bg-primary hover:text-primary-foreground transition-all duration-300">
-                    {cat.name}
-                  </Badge>
+          {/* Categories Bar - Minimalist G1 Style */}
+          <section className="border-y border-border/50 bg-background/95 backdrop-blur sticky top-[64px] z-20 overflow-x-auto scrollbar-hide py-1">
+            <div className="container mx-auto px-4 md:px-6 flex items-center justify-center gap-6 whitespace-nowrap">
+              <Link href="/" className="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-primary py-3 text-primary">
+                Todos
+              </Link>
+              {categories?.map((cat: Category) => (
+                <Link 
+                  key={cat.id} 
+                  href={`/category/${cat.slug}`}
+                  className="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-transparent py-3 text-foreground/60 hover:text-primary hover:border-primary transition-all"
+                >
+                  {cat.name}
                 </Link>
               ))}
             </div>
           </section>
 
-          {/* Regular Feed */}
+          {/* Regular Feed - Two Columns like portal */}
           {remainingPosts.length > 0 && (
             <section className="container mx-auto px-4 md:px-6 py-12">
-              <div className="flex flex-col mb-10">
-                <h2 className="text-3xl font-black tracking-tighter">Mais Notícias</h2>
-                <div className="h-1 w-20 bg-primary mt-2"></div>
+              <div className="flex items-center gap-4 mb-10">
+                <h2 className="text-2xl font-black uppercase tracking-tighter italic">Últimas do Portal</h2>
+                <div className="h-[2px] flex-1 bg-border/50"></div>
               </div>
               
-              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                {remainingPosts.map((post: any) => (
+              <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                {remainingPosts.map((post: Post) => (
                   <PostCard 
                     key={post.id} 
                     title={post.title}
@@ -76,24 +98,28 @@ export default async function Home() {
         </>
       )}
 
-      {/* Newsletter Section - Refined */}
-      <section className="bg-muted/30 py-20 border-t">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-4xl mx-auto bg-card border rounded-[2rem] p-8 md:p-12 shadow-xl flex flex-col md:flex-row items-center gap-8">
-            <div className="flex-1 space-y-4 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-black tracking-tight">Fique por dentro!</h2>
-              <p className="text-muted-foreground text-lg">
-                Receba notícias de editais, dicas de estudo e materiais exclusivos diretamente no seu e-mail.
+      {/* Newsletter Section - High Impact */}
+      <section className="bg-black text-white py-24 border-t border-white/5 overflow-hidden relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-primary via-secondary to-primary"></div>
+        <div className="container mx-auto px-4 md:px-6 relative z-10">
+          <div className="max-w-5xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+            <div className="flex-1 space-y-6 text-center lg:text-left">
+              <Badge className="bg-secondary text-black font-black uppercase tracking-widest px-4 py-1 rounded-none">Exclusivo</Badge>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none italic uppercase">
+                Não perca nenhum <span className="text-primary">edital</span>.
+              </h2>
+              <p className="text-gray-400 text-lg md:text-xl font-medium max-w-xl mx-auto lg:mx-0">
+                Junte-se a +50.000 concurseiros e receba atualizações em tempo real no seu e-mail.
               </p>
             </div>
-            <div className="w-full md:w-auto flex flex-col gap-3 min-w-[300px]">
+            <div className="w-full lg:w-1/3 flex flex-col gap-4">
               <input 
                 type="email" 
-                placeholder="Seu melhor e-mail" 
-                className="flex h-12 w-full rounded-xl border border-input bg-background px-4 py-2 text-sm focus-visible:ring-2 focus-visible:ring-primary outline-hidden"
+                placeholder="SEU MELHOR E-MAIL" 
+                className="flex h-16 w-full rounded-none border-2 border-white/10 bg-white/5 px-6 py-2 text-sm font-bold placeholder:text-gray-600 focus:border-secondary outline-hidden transition-all uppercase tracking-widest"
               />
-              <button className="w-full inline-flex items-center justify-center rounded-xl text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all h-12 px-6">
-                 QUERO RECEBER AS NOVIDADES
+              <button className="w-full inline-flex items-center justify-center rounded-none text-sm font-black bg-primary text-white hover:bg-white hover:text-black transition-all h-16 px-8 shadow-2xl tracking-[0.2em] uppercase italic">
+                 CADASTRAR AGORA
               </button>
             </div>
           </div>

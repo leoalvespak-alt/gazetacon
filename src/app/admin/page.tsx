@@ -70,7 +70,7 @@ export default function AdminDashboard() {
       setAlerts(alertsData)
       setRecentPosts(recentData)
       setFeaturedConcursos(featuredData)
-      setRadarData(radar as RadarItem[])
+      setRadarData(radar)
       setLoading(false)
     }
     

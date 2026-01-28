@@ -4,6 +4,13 @@
 
 export type ConcursoStatus = 
   | 'previsto' 
+  | 'rumor'
+  | 'autorizado'
+  | 'comissao_formada'
+  | 'banca_definida'
+  | 'edital_aberto'
+  | 'suspenso'
+  | 'sem_previsao'
   | 'inscricoes_abertas' 
   | 'inscricoes_encerradas' 
   | 'em_andamento' 
@@ -95,6 +102,7 @@ export interface ConcursoFormData {
   data_prova?: string
   data_resultado?: string
   
+  status?: ConcursoStatus
   edital_url?: string
   site_oficial?: string
   taxa_inscricao?: number
@@ -104,19 +112,33 @@ export interface ConcursoFormData {
 
 // Helpers
 export const STATUS_LABELS: Record<ConcursoStatus, string> = {
+  sem_previsao: 'Sem Previsão',
+  rumor: 'Rumor',
   previsto: 'Previsto',
+  autorizado: 'Autorizado',
+  comissao_formada: 'Comissão Formada',
+  banca_definida: 'Banca Definida',
+  edital_aberto: 'Edital Aberto',
   inscricoes_abertas: 'Inscrições Abertas',
   inscricoes_encerradas: 'Inscrições Encerradas',
   em_andamento: 'Em Andamento',
+  suspenso: 'Suspenso',
   encerrado: 'Encerrado'
 }
 
 export const STATUS_COLORS: Record<ConcursoStatus, string> = {
+  sem_previsao: 'bg-slate-100 text-slate-800',
+  rumor: 'bg-purple-100 text-purple-800',
   previsto: 'bg-gray-100 text-gray-800',
+  autorizado: 'bg-blue-100 text-blue-800',
+  comissao_formada: 'bg-cyan-100 text-cyan-800',
+  banca_definida: 'bg-indigo-100 text-indigo-800',
+  edital_aberto: 'bg-emerald-100 text-emerald-800',
   inscricoes_abertas: 'bg-green-100 text-green-800',
   inscricoes_encerradas: 'bg-yellow-100 text-yellow-800',
   em_andamento: 'bg-blue-100 text-blue-800',
-  encerrado: 'bg-red-100 text-red-800'
+  suspenso: 'bg-red-100 text-red-800',
+  encerrado: 'bg-slate-200 text-slate-900'
 }
 
 export const AREA_LABELS: Record<ConcursoArea, string> = {

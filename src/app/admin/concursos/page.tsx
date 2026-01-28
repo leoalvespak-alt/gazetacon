@@ -45,7 +45,7 @@ import {
 
 import { ConcursoStatusBadge } from "@/components/admin/ConcursoStatusBadge"
 import { listConcursos, deleteConcurso, duplicateConcurso, getConcursosStats } from "./actions"
-import { Concurso, AREA_LABELS, ConcursoArea, ConcursoStatus } from "@/types/concurso"
+import { Concurso, AREA_LABELS, ConcursoArea, ConcursoStatus, STATUS_LABELS } from "@/types/concurso"
 import { toast } from "sonner"
 
 export default function ConcursosPage() {
@@ -214,21 +214,11 @@ export default function ConcursosPage() {
                     Todos
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => setStatusFilter("previsto")}>
-                    Previsto
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setStatusFilter("inscricoes_abertas")}>
-                    Inscrições Abertas
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setStatusFilter("inscricoes_encerradas")}>
-                    Inscrições Encerradas
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setStatusFilter("em_andamento")}>
-                    Em Andamento
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => setStatusFilter("encerrado")}>
-                    Encerrado
-                  </DropdownMenuItem>
+                  {Object.entries(STATUS_LABELS).map(([key, label]) => (
+                    <DropdownMenuItem key={key} onClick={() => setStatusFilter(key)}>
+                      {label}
+                    </DropdownMenuItem>
+                  ))}
                 </DropdownMenuContent>
               </DropdownMenu>
 

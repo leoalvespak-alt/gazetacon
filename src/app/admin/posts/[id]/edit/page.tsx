@@ -14,6 +14,11 @@ import { toast } from 'sonner'
 import { ImageUpload } from '@/components/admin/ImageUpload'
 import { AiAssistant } from '@/components/admin/posts/AiAssistant'
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 export default function EditPostPage({ params }: { params: Promise<{ id: string }> }) {
    const { id } = use(params)
    const router = useRouter()
@@ -24,10 +29,12 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
    const [slug, setSlug] = useState('')
    const [categoryId, setCategoryId] = useState('')
    const [imageUrl, setImageUrl] = useState('')
+   const [authorName, setAuthorName] = useState('')
+   const [readingTime, setReadingTime] = useState<number>(5)
    const [published, setPublished] = useState(false)
    const [loading, setLoading] = useState(false)
    const [fetching, setFetching] = useState(true)
-   const [categories, setCategories] = useState<any[]>([])
+   const [categories, setCategories] = useState<Category[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
 
@@ -35,8 +42,8 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
      const fetchData = async () => {
         setFetching(true)
         // Categorias
-        const { data: catData } = await supabase.from('categories').select('*')
-        if (catData) setCategories(catData)
+        const { data: catData } = await supabase.from('categories').select('id, name')
+        if (catData) setCategories(catData as Category[])
 
         // Post
         const { data: post, error } = await supabase
@@ -49,12 +56,14 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
             toast.error("Erro ao carregar post")
             router.push('/admin/posts')
         } else if (post) {
-            setTitle(post.title)
-            setContent(post.content)
-            setSlug(post.slug)
-            setCategoryId(post.category_id)
-            setImageUrl(post.cover_image_url)
-            setPublished(post.published)
+            setTitle(post.title || '')
+            setContent(post.content || '')
+            setSlug(post.slug || '')
+            setCategoryId(post.category_id || '')
+            setImageUrl(post.cover_image_url || '')
+            setPublished(post.published || false)
+            setAuthorName(post.author_name || '')
+            setReadingTime(post.reading_time || 5)
         }
         setFetching(false)
      }
@@ -212,6 +221,25 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                    <div className="space-y-2">
                        <Label>Slug</Label>
                        <Input value={slug} onChange={e => setSlug(e.target.value)} className="bg-muted" />
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-2">
+                           <Label>Autor (Exibição)</Label>
+                           <Input 
+                               value={authorName} 
+                               onChange={e => setAuthorName(e.target.value)} 
+                               placeholder="Nome do autor"
+                           />
+                       </div>
+                       <div className="space-y-2">
+                           <Label>Tempo (min)</Label>
+                           <Input 
+                               type="number"
+                               value={readingTime} 
+                               onChange={e => setReadingTime(parseInt(e.target.value) || 0)} 
+                           />
+                       </div>
                    </div>
 
                    <div className="space-y-2">

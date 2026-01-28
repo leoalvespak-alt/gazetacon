@@ -16,11 +16,25 @@ function generateSlug(titulo: string): string {
 
 // Função para calcular status automaticamente
 function calculateStatus(concurso: Partial<ConcursoFormData>): ConcursoStatus {
+  // Se o status já for um dos manuais e estiver presente, mantém ele
+  const manualStatuses: ConcursoStatus[] = [
+    'rumor', 
+    'autorizado', 
+    'comissao_formada', 
+    'banca_definida', 
+    'suspenso', 
+    'sem_previsao'
+  ];
+
+  if (concurso.status && manualStatuses.includes(concurso.status)) {
+    return concurso.status;
+  }
+
   const now = new Date()
   now.setHours(0, 0, 0, 0)
   
   if (concurso.data_inscricao_inicio && new Date(concurso.data_inscricao_inicio) > now) {
-    return 'previsto'
+    return concurso.status || 'previsto'
   }
   
   if (concurso.data_inscricao_inicio && concurso.data_inscricao_fim) {
@@ -42,7 +56,7 @@ function calculateStatus(concurso: Partial<ConcursoFormData>): ConcursoStatus {
     }
   }
   
-  return 'previsto'
+  return (concurso.status as ConcursoStatus) || 'previsto'
 }
 
 // Criar concurso
@@ -310,9 +324,15 @@ export async function getConcursosStats(): Promise<{
   
   return {
     total: data.length,
-    inscricoesAbertas: data.filter((c: { status: string }) => c.status === 'inscricoes_abertas').length,
-    previstos: data.filter((c: { status: string }) => c.status === 'previsto').length,
-    encerrados: data.filter((c: { status: string }) => c.status === 'encerrado').length
+    inscricoesAbertas: data.filter((c: { status: string }) => 
+      c.status === 'inscricoes_abertas' || c.status === 'edital_aberto'
+    ).length,
+    previstos: data.filter((c: { status: string }) => 
+      ['previsto', 'rumor', 'autorizado', 'comissao_formada', 'banca_definida'].includes(c.status)
+    ).length,
+    encerrados: data.filter((c: { status: string }) => 
+      c.status === 'encerrado' || c.status === 'suspenso'
+    ).length
   }
 }
 

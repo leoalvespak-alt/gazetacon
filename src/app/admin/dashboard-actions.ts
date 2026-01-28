@@ -2,6 +2,7 @@
 
 import { createServerSupabaseClient } from '@/lib/supabase-server'
 import { AREA_LABELS, ConcursoArea } from '@/types/concurso'
+import { RadarItem } from '@/components/admin/RadarEditais'
 
 export interface DashboardStats {
   totalPosts: number
@@ -259,7 +260,7 @@ export async function getFeaturedConcursos(limit: number = 5): Promise<FeaturedC
 }
 
 // Buscar dados para o Radar de Editais
-export async function getRadarData(limit: number = 5) {
+export async function getRadarData(limit: number = 5): Promise<RadarItem[]> {
   const supabase = await createServerSupabaseClient()
   const today = new Date().toISOString().split('T')[0]
 
@@ -272,5 +273,5 @@ export async function getRadarData(limit: number = 5) {
     .order('data_inscricao_fim', { ascending: true })
     .limit(limit)
 
-  return data || []
+  return (data || []) as RadarItem[]
 }

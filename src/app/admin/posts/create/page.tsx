@@ -15,6 +15,11 @@ import { ImageUpload } from '@/components/admin/ImageUpload'
 import { SeoSnippetPreview } from '@/components/admin/posts/SeoSnippetPreview'
 import { AiAssistant } from '@/components/admin/posts/AiAssistant'
 
+interface Category {
+  id: string;
+  name: string;
+}
+
 export default function CreatePostPage() {
    const router = useRouter()
    const [title, setTitle] = useState('')
@@ -23,9 +28,11 @@ export default function CreatePostPage() {
    const [seoDescription, setSeoDescription] = useState('')
    const [categoryId, setCategoryId] = useState('')
    const [imageUrl, setImageUrl] = useState('')
+   const [authorName, setAuthorName] = useState('')
+   const [readingTime, setReadingTime] = useState<number>(5)
    const [published, setPublished] = useState(false)
    const [loading, setLoading] = useState(false)
-   const [categories, setCategories] = useState<any[]>([])
+   const [categories, setCategories] = useState<Category[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
    const supabase = createClient()
@@ -33,8 +40,8 @@ export default function CreatePostPage() {
    // Efeito para carregar categorias
    useEffect(() => {
      const fetchCats = async () => {
-        const { data } = await supabase.from('categories').select('*')
-        if (data) setCategories(data)
+        const { data } = await supabase.from('categories').select('id, name')
+        if (data) setCategories(data as Category[])
      }
      fetchCats()
    }, [])
@@ -86,7 +93,9 @@ export default function CreatePostPage() {
                published,
                seo_title: title,
                seo_description: seoDescription,
-               author_id: user.id
+               author_id: user.id,
+               author_name: authorName,
+               reading_time: readingTime
            }
 
            const { error: insertError } = await supabase.from('posts').insert(postData)
@@ -210,10 +219,43 @@ export default function CreatePostPage() {
                           ))}
                        </select>
                    </div>
+
+                   <div className="space-y-2">
+                      <Label>Concurso Relacionado (Opcional)</Label>
+                       <select 
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                            value={concursoId}
+                            onChange={(e) => setConcursoId(e.target.value)}
+                        >
+                          <option value="">Nenhum</option>
+                          {concursos.map(conc => (
+                              <option key={conc.id} value={conc.id}>{conc.titulo}</option>
+                          ))}
+                       </select>
+                   </div>
                    
                    <div className="space-y-2">
                        <Label>Slug</Label>
                        <Input value={slug} readOnly className="bg-muted text-muted-foreground" />
+                   </div>
+
+                   <div className="grid grid-cols-2 gap-4">
+                       <div className="space-y-2">
+                           <Label>Autor (Exibição)</Label>
+                           <Input 
+                               value={authorName} 
+                               onChange={e => setAuthorName(e.target.value)} 
+                               placeholder="Nome do autor"
+                           />
+                       </div>
+                       <div className="space-y-2">
+                           <Label>Tempo (min)</Label>
+                           <Input 
+                               type="number"
+                               value={readingTime} 
+                               onChange={e => setReadingTime(parseInt(e.target.value) || 0)} 
+                           />
+                       </div>
                    </div>
 
                    <div className="space-y-2">
