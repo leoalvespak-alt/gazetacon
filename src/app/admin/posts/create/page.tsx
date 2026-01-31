@@ -2,6 +2,8 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
+import { AREA_LABELS } from '@/types/concurso'
+
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -45,6 +47,7 @@ export default function CreatePostPage() {
    const [concursos, setConcursos] = useState<Concurso[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
+   const [area, setArea] = useState('')
    const supabase = createClient()
 
    useEffect(() => {
@@ -112,6 +115,7 @@ export default function CreatePostPage() {
                author_id: user.id,
                author_name: authorName,
                reading_time: readingTime,
+               area: area || null,
            }
 
            const { error: insertError } = await supabase.from('posts').insert(postData)
@@ -254,6 +258,20 @@ export default function CreatePostPage() {
                           <option value="">Selecione...</option>
                           {categories.map(cat => (
                               <option key={cat.id} value={cat.id}>{cat.name}</option>
+                          ))}
+                       </select>
+                   </div>
+
+                   <div className="space-y-2">
+                      <Label>Carreira / Área (Opcional)</Label>
+                       <select 
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                            value={area}
+                            onChange={(e) => setArea(e.target.value)}
+                        >
+                          <option value="">Nenhuma</option>
+                          {Object.entries(AREA_LABELS).map(([key, label]) => (
+                              <option key={key} value={key}>{label}</option>
                           ))}
                        </select>
                    </div>

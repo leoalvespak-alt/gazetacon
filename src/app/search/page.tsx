@@ -5,6 +5,8 @@ import { supabase } from "@/lib/supabase"
 import { PostCard } from "@/components/blog/PostCard"
 import { Input } from "@/components/ui/input"
 import { Loader2, Search as SearchIcon } from "lucide-react"
+import { AREA_LABELS } from "@/types/concurso"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 
 interface Post {
   id: string
@@ -16,58 +18,76 @@ interface Post {
   categories: {
     name: string
   } | null
+  area?: string | null
 }
 
 function SearchContent() {
   const searchParams = useSearchParams()
   const initialQuery = searchParams.get("q") || ""
+  const initialArea = searchParams.get("area") || "all"
   
   const [query, setQuery] = useState(initialQuery)
+  const [area, setArea] = useState(initialArea)
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(false)
 
-  const handleSearch = useCallback(async (searchQuery: string) => {
-    if (!searchQuery.trim()) {
-        setPosts([])
-        return
-    }
-    
+  const handleSearch = useCallback(async (searchQuery: string, searchArea: string) => {
     setLoading(true)
-    const { data } = await supabase
+    
+    let queryBuilder = supabase
       .from('posts')
       .select('*, categories(*)')
       .eq('published', true)
-      .ilike('title', `%${searchQuery}%`)
       .order('created_at', { ascending: false })
+
+    if (searchQuery.trim()) {
+       queryBuilder = queryBuilder.ilike('title', `%${searchQuery}%`)
+    }
+
+    if (searchArea && searchArea !== 'all') {
+       queryBuilder = queryBuilder.eq('area', searchArea)
+    }
+
+    const { data } = await queryBuilder
 
     if (data) setPosts(data as Post[])
     setLoading(false)
   }, [])
 
   useEffect(() => {
-    if (initialQuery) {
-        // Use setTimeout to avoid setState in effect body warning
-        const timer = setTimeout(() => handleSearch(initialQuery), 0)
-        return () => clearTimeout(timer)
-    }
-  }, [initialQuery, handleSearch])
+    // Initial fetch to show something or filter if present
+    const timer = setTimeout(() => handleSearch(query, area), 0)
+    return () => clearTimeout(timer)
+  }, [handleSearch, query, area])
 
   return (
     <div className="container px-4 md:px-6 py-12 md:py-16">
       <div className="max-w-2xl mx-auto text-center space-y-4 mb-12">
         <h1 className="text-4xl font-bold tracking-tight">Buscar na Gazeta</h1>
         <p className="text-muted-foreground">Encontre notícias, editais e dicas relevantes para sua aprovação.</p>
-        <div className="relative mt-8">
-           <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-           <Input 
-             className="pl-10 h-12 text-lg" 
-             placeholder="Digite sua busca..." 
-             value={query}
-             onChange={(e) => {
-                 setQuery(e.target.value)
-                 handleSearch(e.target.value)
-             }}
-           />
+        <div className="flex gap-4 max-w-2xl mx-auto items-center mt-8">
+            <div className="relative flex-1">
+               <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+               <Input 
+                 className="pl-10 h-10" 
+                 placeholder="Digite sua busca..." 
+                 value={query}
+                 onChange={(e) => setQuery(e.target.value)}
+               />
+            </div>
+            <div className="w-[200px]">
+                <Select value={area} onValueChange={setArea}>
+                    <SelectTrigger>
+                        <SelectValue placeholder="Carreira" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="all">Todas as Carreiras</SelectItem>
+                        {Object.entries(AREA_LABELS).map(([key, label]) => (
+                            <SelectItem key={key} value={key}>{label}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
         </div>
       </div>
 
@@ -82,6 +102,7 @@ function SearchContent() {
               key={post.id} 
               title={post.title}
               category={post.categories?.name || 'Geral'}
+              area={post.area && AREA_LABELS[post.area as keyof typeof AREA_LABELS] ? AREA_LABELS[post.area as keyof typeof AREA_LABELS] : undefined}
               excerpt={post.excerpt}
               date={new Date(post.created_at).toLocaleDateString()}
               readTime="5 min"

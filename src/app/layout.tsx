@@ -9,15 +9,19 @@ import { SettingsProvider } from "@/components/providers/settings-provider";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Gazeta dos Concursos",
-  description: "Dicas, Notícias e Editais de Concursos Públicos",
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/logo.png",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const settings = await getSettings();
+
+  return {
+    title: settings.defaultMetaTitle || "Gazeta dos Concursos",
+    description: settings.defaultMetaDescription || "Dicas, Notícias e Editais de Concursos Públicos",
+    icons: {
+      icon: settings.faviconUrl || "/favicon.ico?v=3",
+      shortcut: settings.faviconUrl || "/favicon.ico?v=3",
+      apple: settings.logoUrl || "/logo.png?v=3",
+    },
+  };
+}
 
 import { Toaster } from "@/components/ui/sonner";
 

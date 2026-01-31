@@ -1,12 +1,13 @@
 "use client"
 import Link from "next/link"
 import { Calendar, Clock, ArrowRight } from "lucide-react"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 
 interface PostCardProps {
   title: string
   category: string
+  area?: string | null
   excerpt: string
   date: string
   readTime: string
@@ -14,7 +15,7 @@ interface PostCardProps {
   slug: string
 }
 
-export function PostCard({ title, category, excerpt, date, readTime, image, slug }: PostCardProps) {
+export function PostCard({ title, category, area, excerpt, date, readTime, image, slug }: PostCardProps) {
   return (
     <Card className="group overflow-hidden flex flex-col h-full border-none shadow-none bg-transparent hover:bg-muted/30 transition-all duration-300 rounded-none border-b border-border/50 pb-6">
       <Link href={`/blog/${slug}`} className="block relative aspect-video w-full overflow-hidden rounded-lg mb-4">
@@ -23,10 +24,15 @@ export function PostCard({ title, category, excerpt, date, readTime, image, slug
           alt={title} 
           className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
         />
-        <div className="absolute top-2 left-2">
+        <div className="absolute top-2 left-2 flex flex-col gap-1 items-start">
            <Badge className="bg-primary text-primary-foreground border-none text-[9px] uppercase font-black px-2 py-0.5 rounded-none tracking-widest">
             {category}
            </Badge>
+           {area && (
+             <Badge className="bg-secondary text-secondary-foreground border-none text-[9px] uppercase font-black px-2 py-0.5 rounded-none tracking-widest">
+              {area}
+             </Badge>
+           )}
         </div>
       </Link>
       

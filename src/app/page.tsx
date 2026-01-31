@@ -4,6 +4,7 @@ import { PostCard } from "@/components/blog/PostCard"
 import { EmptyState } from "@/components/blog/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
+import { AREA_LABELS } from "@/types/concurso"
 
 export const dynamic = "force-dynamic";
 
@@ -21,6 +22,7 @@ interface Post {
   cover_image_url: string;
   created_at: string;
   categories: { name: string };
+  area?: string | null;
 }
 
 export default async function Home() {
@@ -87,6 +89,7 @@ export default async function Home() {
                   key={post.id} 
                   title={post.title}
                   category={post.categories?.name || 'Geral'}
+                  area={post.area && AREA_LABELS[post.area as keyof typeof AREA_LABELS] ? AREA_LABELS[post.area as keyof typeof AREA_LABELS] : undefined}
                   excerpt={post.excerpt}
                   date={new Date(post.created_at).toLocaleDateString('pt-BR')}
                   readTime="5 min"

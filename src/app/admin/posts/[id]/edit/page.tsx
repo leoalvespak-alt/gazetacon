@@ -2,6 +2,7 @@
 import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase-browser'
+import { AREA_LABELS } from '@/types/concurso'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -49,6 +50,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
    const [concursos, setConcursos] = useState<Concurso[]>([])
    const [tags, setTags] = useState<string[]>([])
    const [tagInput, setTagInput] = useState('')
+   const [area, setArea] = useState('')
 
    useEffect(() => {
      const fetchData = async () => {
@@ -86,6 +88,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                 setAuthorName(post.author_name || '')
                 setReadingTime(post.reading_time || 5)
                 setSeoDescription(post.seo_description || '')
+                setArea(post.area || '')
             }
         } catch (err) {
             console.error(err)
@@ -141,6 +144,7 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                seo_title: title,
                author_name: authorName,
                reading_time: readingTime,
+               area: area || null,
                updated_at: new Date().toISOString()
            }
 
@@ -295,6 +299,20 @@ export default function EditPostPage({ params }: { params: Promise<{ id: string 
                           <option value="">Selecione...</option>
                           {categories.map(cat => (
                               <option key={cat.id} value={cat.id}>{cat.name}</option>
+                          ))}
+                       </select>
+                   </div>
+
+                   <div className="space-y-2">
+                      <Label>Carreira / Área (Opcional)</Label>
+                       <select 
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background disabled:cursor-not-allowed disabled:opacity-50"
+                            value={area}
+                            onChange={(e) => setArea(e.target.value)}
+                        >
+                          <option value="">Nenhuma</option>
+                          {Object.entries(AREA_LABELS).map(([key, label]) => (
+                              <option key={key} value={key}>{label}</option>
                           ))}
                        </select>
                    </div>
