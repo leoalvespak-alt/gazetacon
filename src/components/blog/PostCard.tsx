@@ -42,9 +42,11 @@ export function PostCard({ title, category, area, excerpt, date, readTime, image
               {title}
             </h3>
         </Link>
-        <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed font-medium mb-4">
-          {excerpt}
-        </p>
+        <Link href={`/blog/${slug}`} className="group/excerpt">
+          <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed font-medium mb-4 group-hover/excerpt:text-foreground transition-colors">
+            {excerpt}
+          </p>
+        </Link>
         
         <div className="mt-auto flex items-center justify-between text-[10px] font-black text-muted-foreground uppercase tracking-widest">
           <div className="flex items-center gap-4">

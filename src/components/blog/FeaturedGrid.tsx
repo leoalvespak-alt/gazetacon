@@ -57,6 +57,7 @@ export function FeaturedGrid({ posts }: FeaturedGridProps) {
         {/* Main Featured Carousel */}
         <div className="lg:col-span-8 group relative overflow-hidden rounded-xl border-none aspect-video lg:aspect-auto lg:h-[480px] shadow-2xl bg-black">
           
+
           {/* Carousel Content */}
           <div className="relative h-full w-full">
             {carouselPosts.map((post, index) => (
@@ -64,34 +65,33 @@ export function FeaturedGrid({ posts }: FeaturedGridProps) {
                  key={post.id} 
                  className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${index === currentSlide ? "opacity-100 z-10" : "opacity-0 z-0"}`}
                >
-                  <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-20">
-                    <span className="sr-only">Ver {post.title}</span>
-                  </Link>
-                  <Image 
-                    src={post.cover_image_url || "/hero.png"} 
-                    alt={post.title}
-                    fill
-                    className="object-cover"
-                    priority={index === 0}
-                  />
-                  <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6 md:p-12 z-20">
-                    <div className="space-y-4 max-w-3xl animate-in slide-in-from-bottom-5 fade-in duration-700">
-                      <div className="flex items-center gap-3">
-                        <span className="bg-primary hover:bg-primary/90 text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]">
-                          {post.categories?.name || "Destaque"}
-                        </span>
-                        <span className="text-white/70 text-[10px] font-bold uppercase tracking-widest">
-                          {new Date(post.created_at).toLocaleDateString('pt-BR')}
-                        </span>
+                  <Link href={`/blog/${post.slug}`} className="block relative h-full w-full z-20 cursor-pointer">
+                    <Image 
+                      src={post.cover_image_url || "/hero.png"} 
+                      alt={post.title}
+                      fill
+                      className="object-cover"
+                      priority={index === 0}
+                    />
+                    <div className="absolute inset-0 bg-linear-to-t from-black via-black/40 to-transparent flex flex-col justify-end p-6 md:p-12">
+                      <div className="space-y-4 max-w-3xl animate-in slide-in-from-bottom-5 fade-in duration-700">
+                        <div className="flex items-center gap-3">
+                          <span className="bg-primary hover:bg-primary/90 text-white px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em]">
+                            {post.categories?.name || "Destaque"}
+                          </span>
+                          <span className="text-white/70 text-[10px] font-bold uppercase tracking-widest">
+                            {new Date(post.created_at).toLocaleDateString('pt-BR')}
+                          </span>
+                        </div>
+                        <h2 className="text-3xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter hover:text-secondary transition-colors duration-300">
+                          {post.title}
+                        </h2>
+                        <p className="text-white/80 text-sm md:text-lg line-clamp-2 leading-relaxed font-medium hidden md:block">
+                          {post.excerpt}
+                        </p>
                       </div>
-                      <h2 className="text-3xl md:text-5xl font-black text-white leading-[1.1] tracking-tighter hover:text-secondary transition-colors duration-300">
-                        {post.title}
-                      </h2>
-                      <p className="text-white/80 text-sm md:text-lg line-clamp-2 leading-relaxed font-medium hidden md:block">
-                        {post.excerpt}
-                      </p>
                     </div>
-                  </div>
+                  </Link>
                </div>
             ))}
           </div>
@@ -102,7 +102,7 @@ export function FeaturedGrid({ posts }: FeaturedGridProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white hover:bg-black/50 hover:text-white rounded-full h-10 w-10 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-30 text-white hover:bg-black/50 hover:text-white rounded-full h-10 w-10 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto"
                 onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
@@ -114,7 +114,7 @@ export function FeaturedGrid({ posts }: FeaturedGridProps) {
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white hover:bg-black/50 hover:text-white rounded-full h-10 w-10 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-30 text-white hover:bg-black/50 hover:text-white rounded-full h-10 w-10 border border-white/20 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none group-hover:pointer-events-auto"
                 onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()

@@ -5,6 +5,8 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { ShareButtons } from "@/components/blog/ShareButtons"
+import { BlogSidebar } from "@/components/blog/BlogSidebar"
+import { NewsletterForm } from "@/components/newsletter/NewsletterForm"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -151,6 +153,10 @@ export default async function BlogPostPage({ params }: PageProps) {
                <ShareButtons title={post.title} />
             </div>
 
+           <div className="mt-12 not-prose">
+              <NewsletterForm variant="footer" source="post_footer" />
+           </div>
+
           
           {post.cover_image_url && (
               <div className="relative w-full h-auto max-h-[500px] aspect-video overflow-hidden rounded-xl shadow-md mb-10">
@@ -174,16 +180,7 @@ export default async function BlogPostPage({ params }: PageProps) {
         </article>
 
         {/* Sidebar */}
-        <aside className="hidden md:block space-y-8">
-           <div className="sticky top-24 space-y-6">
-              <div className="rounded-xl border bg-card text-card-foreground shadow p-6">
-                 <h3 className="font-semibold mb-4">Sobre o Blog</h3>
-                 <p className="text-sm text-muted-foreground">
-                    A Gazeta dos Concursos ajuda milhares de estudantes a alcançarem a aprovação com dicas estratégicas e material de qualidade.
-                 </p>
-              </div>
-           </div>
-        </aside>
+        <BlogSidebar />
       </div>
     </div>
   )

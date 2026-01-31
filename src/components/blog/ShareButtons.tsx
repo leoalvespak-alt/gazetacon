@@ -7,7 +7,8 @@ import {
   Twitter, 
   Link as LinkIcon, 
   Check,
-  MessageCircle
+  MessageCircle,
+  Instagram
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { toast } from "sonner"
@@ -23,15 +24,26 @@ interface ShareButtonsProps {
   url?: string
 }
 
+type ShareLink = {
+  name: string
+  icon: React.ElementType
+  href: string
+  color: string
+  onClick?: () => void
+}
+
 export function ShareButtons({ title, url: propUrl }: ShareButtonsProps) {
   const [url, setUrl] = useState("")
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setUrl(propUrl || window.location.href)
+      const currentUrl = propUrl || window.location.href
+      if (currentUrl !== url) {
+        setUrl(currentUrl)
+      }
     }
-  }, [propUrl])
+  }, [propUrl, url])
 
   const handleCopy = async () => {
     try {
@@ -45,7 +57,7 @@ export function ShareButtons({ title, url: propUrl }: ShareButtonsProps) {
     }
   }
 
-  const shareLinks = [
+  const shareLinks: ShareLink[] = [
     {
       name: "WhatsApp",
       icon: MessageCircle,
@@ -70,6 +82,32 @@ export function ShareButtons({ title, url: propUrl }: ShareButtonsProps) {
       href: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       color: "hover:text-blue-600 hover:bg-blue-50",
     },
+    {
+      name: "Instagram",
+      icon: Instagram,
+      href: "#",
+      // On mobile, this tries to open story camera. On desktop, it's a placeholder.
+      // We handle the click to copy link first.
+      onClick: () => {
+        navigator.clipboard.writeText(url).then(() => {
+           toast.success("Link copiado! Coloque nos stories.")
+        })
+        // Attempt to open Instagram Stories Camera (mobile)
+        // This URL scheme works on some devices if app is installed
+        window.location.href = "instagram://story-camera"
+        
+        // Fallback or additional guidance could be added here
+        // e.g. if we could detect desktop, we might open instagram.com
+        setTimeout(() => {
+           // If the app didn't open (e.g. desktop), redirect to instagram web
+           // logic to detect if it opened is complex, so we might just let it be.
+           if (!/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+              window.open("https://instagram.com", "_blank")
+           }
+        }, 500)
+      },
+      color: "hover:text-pink-600 hover:bg-pink-50",
+    },
   ]
 
   if (!url) return null
@@ -83,24 +121,40 @@ export function ShareButtons({ title, url: propUrl }: ShareButtonsProps) {
       
       <div className="flex items-center gap-1">
         <TooltipProvider>
-            {shareLinks.map((link) => (
-            <Tooltip key={link.name}>
-                <TooltipTrigger asChild>
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    className={`h-9 w-9 rounded-full transition-colors ${link.color}`}
-                    asChild
-                >
-                    <a href={link.href} target="_blank" rel="noopener noreferrer">
-                    <link.icon className="h-4 w-4" />
-                    <span className="sr-only">Compartilhar no {link.name}</span>
-                    </a>
-                </Button>
-                </TooltipTrigger>
-                <TooltipContent>{link.name}</TooltipContent>
-            </Tooltip>
-            ))}
+{shareLinks.map((link) => {
+              const LinkIcon = link.icon
+              return (
+                <Tooltip key={link.name}>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className={`h-9 w-9 rounded-full transition-colors ${link.color}`}
+                      onClick={(e) => {
+                        if (link.onClick) {
+                          e.preventDefault()
+                          link.onClick()
+                        }
+                      }}
+                      asChild={!link.onClick}
+                    >
+                      {link.onClick ? (
+                        <div className="cursor-pointer">
+                          <LinkIcon className="h-4 w-4" />
+                          <span className="sr-only">Compartilhar no {link.name}</span>
+                        </div>
+                      ) : (
+                        <a href={link.href} target="_blank" rel="noopener noreferrer">
+                          <LinkIcon className="h-4 w-4" />
+                          <span className="sr-only">Compartilhar no {link.name}</span>
+                        </a>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>{link.name}</TooltipContent>
+                </Tooltip>
+              )
+            })}
 
             <div className="w-px h-4 bg-border mx-1" />
 
