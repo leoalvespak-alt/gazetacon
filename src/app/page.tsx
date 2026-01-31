@@ -5,6 +5,12 @@ import { EmptyState } from "@/components/blog/EmptyState"
 import { Badge } from "@/components/ui/badge"
 import Link from "next/link"
 import { AREA_LABELS } from "@/types/concurso"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export const dynamic = "force-dynamic";
 
@@ -64,7 +70,7 @@ export default async function Home() {
               <Link href="/" className="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-primary py-3 text-primary">
                 Todos
               </Link>
-              {categories?.map((cat: Category) => (
+              {categories?.filter(c => c.slug !== 'por-area' && c.slug !== 'areas').map((cat: Category) => (
                 <Link 
                   key={cat.id} 
                   href={`/category/${cat.slug}`}
@@ -73,6 +79,21 @@ export default async function Home() {
                   {cat.name}
                 </Link>
               ))}
+
+              <DropdownMenu>
+                <DropdownMenuTrigger className="text-[10px] font-black uppercase tracking-[0.2em] border-b-2 border-transparent py-3 text-foreground/60 hover:text-primary hover:border-primary transition-all outline-none">
+                  Por Área
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                   {Object.entries(AREA_LABELS).map(([key, label]) => (
+                     <DropdownMenuItem key={key} asChild>
+                        <Link href={`/search?area=${key}`} className="w-full cursor-pointer uppercase text-[10px] font-bold tracking-wider">
+                          {label}
+                        </Link>
+                     </DropdownMenuItem>
+                   ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           </section>
 
